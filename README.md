@@ -51,31 +51,34 @@ When run with a specific command on an object only that operation will be run - 
 All generated output is sent to the terminal (or IDE output window).
 
 e.g.:
-<pre>
+```
 $ python restdemo.py -h
+  restdemo.py -t|--target <target root URL> -c|--command <command>
+  e.g.:$ restdemo.py -t www.myschool.edu -c create_course
+         command: <command>_<object> where <command> is one of the following:
+           create, read, update, delete
+         and &lt;object&gt; is one of the following:
+           datasource, term, course, user, membership
+         -t is required; No -c args will run demo in predetermined order.
+         -c commands require a valid datasource PK1 -
+	    a datasource get will be run in these cases, defaulting to create
+	    if the demo datasource does not exist.
+```
 
-restdemo.py -t|--target <target root URL> -c|--command <command><br/>
-e.g. restdemo.py -t www.myschool.edu -c create_course<br/>
-command: <command>_<object> where <command> is one of the following:<br/>
-	create, read, read_all, update, delete<br/>
-and <object> is one of the following:<br/>
-	datasource, term, course, user, membership<br/>
--t is required; No -c args will run demo in predetermined order.<br/>
-</pre>
-
-<pre>
+For example:
+```
 $ python restdemo.py -t localhost:9877
-</pre>
+```
 <i>Runs the full CRUD demo</i>
 
-<pre>
+```
 $ python restdemo.py -t localhost:9877 -c create_datasource
-</pre>
+```
 <i>Runs the datasource.py:createDataSource() demo code and does not clean up the remote system after running you must run: </i>
 
-<pre>
-    $ python restdemo.py -t localhost:9877 -c delete_datasource
-</pre>
+```
+$ python restdemo.py -t localhost:9877 -c delete_datasource
+```
 <i>to remove the created data source.</i>
 <br/><br/>
 

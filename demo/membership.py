@@ -2,9 +2,13 @@
 Copyright (C) 2016, Blackboard Inc.
 All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
 Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
 Neither the name of Blackboard Inc. nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
 THIS SOFTWARE IS PROVIDED BY BLACKBOARD INC ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL BLACKBOARD INC. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
@@ -34,16 +38,15 @@ class Membership():
         self.token = token
         self.memberships_Path = '/learn/api/public/v1/courses/courseId/users' #create(POST)/get(GET)
         self.membership_Path = '/learn/api/public/v1/courses/courseId/users/userId'
-        self.dskExternalId = 'BbDN-DSK'
-        self.courseExternalId = "BbDN-Python-REST_Demo"
-        self.termExternalId = 'BbDN-TERM'
-        self.usrExternalId = 'bbdnrestdemouser'
-
+        self.userMembships_Path = '/learn/api/public/v1/users/userId/courses'
 
     def execute(self, command, dsk, token):
         if "create" in command:
             print('[Membership:execute] : ' + command)
             self.createMembership(dsk, token)
+        elif "readUserMemberships" in command:
+            print ('[Membership:execute] : ' + command)
+            self.readUserMemberships(token)
         elif "read" in command:
             print('[Membership:execute] : ' + command)
             self.getMembership(token)
@@ -73,7 +76,6 @@ class Membership():
         memberships_Path = memberships_Path.replace("courseId", replacement)
 
         r = session.get("https://" + self.target_url + memberships_Path, headers={'Authorization':authStr}, verify=False)
-        #r = session.get("https://" + self.target_url + self.memberships_Path+self.courseId+"/users", headers={'Authorization':authStr}, verify=False)
         print("[Membership:getMemberships()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:getMemberships()] RESPONSE: " + r.text)
 
@@ -81,8 +83,6 @@ class Membership():
     def createMembership(self, dsk, token):
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-
-        print ("[Membership:createMembership()] Starting")
 
         self.PAYLOAD = {
             "dataSourceId":dsk, #self.dskExternalId, supported soon.
@@ -125,9 +125,27 @@ class Membership():
         membership_Path = membership_Path.replace("userId", replacement)
 
         r = session.get("https://" + self.target_url + membership_Path, headers={'Authorization':authStr},  verify=False)
-
         print("[Membership:getMembership()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:getMembership()] RESPONSE: " + r.text)
+
+
+    def readUserMemberships(self, token):
+        #GET /learn/api/public/v1/users/{userId}/courses
+        print('[Membership:readUserMemberships] token: ' + token)
+        #"Authorization: Bearer $token"
+        authStr = 'Bearer ' + token
+        print('[Membership:readUserMemberships] authStr: ' + authStr)
+        session = requests.session()
+        session.mount('https://', Tls1Adapter()) # remove for production
+
+        replacement = "externalId:" + USEREXTERNALID
+        userMemberships_Path = self.userMembships_Path
+        userMemberships_Path = userMemberships_Path.replace("userId", replacement)
+        print('[Membership:readUserMemberships] userMemberships_Path: ' + userMemberships_Path)
+        r = session.get("https://" + self.target_url + userMemberships_Path, headers={'Authorization':authStr},  verify=False)
+        print("[Membership:readUserMemberships()] STATUS CODE: " + str(r.status_code) )
+        print("[Membership:readUserMemberships()] RESPONSE: " + r.text)
+
 
 
     def updateMembership(self, dsk, token):
@@ -153,7 +171,6 @@ class Membership():
         membership_Path = membership_Path.replace("userId", replacement)
 
         r = session.patch("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
-
         print("[Membership:updateMembership()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:updateMembership()] RESPONSE: " + r.text)
 
@@ -173,6 +190,5 @@ class Membership():
         membership_Path = membership_Path.replace("userId", replacement)
 
         r = session.delete("https://" + self.target_url + membership_Path, headers={'Authorization':authStr}, verify=False)
-
         print("[Membership:deleteMembership()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:deleteMembership()] RESPONSE: " + r.text)

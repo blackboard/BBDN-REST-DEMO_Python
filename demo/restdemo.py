@@ -24,6 +24,7 @@ def main(argv):
     target_url = ''
     COMMAND = ''
     ALL = False
+    AUTH = False
     DATASOURCE = False
     TERM = False
     COURSE = False
@@ -40,6 +41,7 @@ def main(argv):
     usageStr += "and <object> is one of the following:\n"
     usageStr += "\tdatasource, term, course, user, membership\n"
     usageStr += "-t is required; No -c args will run demo in predetermined order.\n"
+    usageStr += "'-c authorize' demomonstrates the authorization process and does not create objects."
     usageStr += "-c commands require a valid datasource PK1 - \n"
     usageStr += "\ta datasource get will be run in these cases, defaulting to create\n"
     usageStr += "\tif the demo datasource does not exist."
@@ -48,11 +50,11 @@ def main(argv):
         try:
             opts, args = getopt.getopt(argv,"ht:c:",["target=","command="])
         except getopt.GetoptError:
-            print usageStr
+            print (usageStr)
             sys.exit(2)
         for opt, arg in opts:
             if opt == '-h':
-                print usageStr
+                print (usageStr)
                 sys.exit()
             elif opt == '-d':
                 print ("Deleting at end of run.")
@@ -63,8 +65,8 @@ def main(argv):
                 COMMAND = arg
             else:
                 COMMAND = "Run All"
-        print '[main] Target is:', target_url
-        print '[main] Command is:', COMMAND
+        print ('[main] Target is:', target_url)
+        print ('[main] Command is:', COMMAND)
 
 
     else:
@@ -88,142 +90,147 @@ def main(argv):
     elif "datasource" in COMMAND:
         print("[main] Run datasource command")
         DATASOURCE = True
+    elif "authorize" in COMMAND:
+        print("[main] Run authorization command")
+        AUTH = True
     else:
         print("[main] Empty Command: Run All\n")
         ALL = True
 
+
     print ('\n[main] Acquiring auth token...\n')
-    authenticated_session = AuthToken(target_url)
-    authenticated_session.setToken()
-    print ('\n[main] Returned token: ' + authenticated_session.getToken() + '\n')
+    authorized_session = AuthToken(target_url)
+    authorized_session.setToken()
+    print ('\n[main] Returned token: ' + authorized_session.getToken() + '\n')
 
-    #run commands in required order if running ALL
-    if DATASOURCE or ALL:
-        #process Datasource command
-        print("\n[main] Run datasource command: " + ('ALL' if ALL else COMMAND) + '...')
-        datasource_session = DataSource(target_url, authenticated_session.getToken())
-        if 'datasource' in COMMAND:
-            datasource_session.execute(COMMAND, authenticated_session.getToken())
-        else:
-            #datasource_session.getDataSources(authenticated_session.getToken())
-            datasource_session.createDataSource(authenticated_session.getToken())
-            datasource_PK1 = datasource_session.datasource_PK1
-            print("[main] datasource_PK1: " + datasource_PK1)
-            datasource_session.getDataSource(authenticated_session.getToken())
-            datasource_session.updateDataSource(authenticated_session.getToken())
-
-
-    if TERM or ALL:
-        term_session = Term(target_url, authenticated_session.getToken())
-        #process term command
-        print("\n[main] Run term command: " + ('ALL' if ALL else COMMAND) + '...')
-        if 'term' in COMMAND:
-            if (('delete' in COMMAND) or ('read' in COMMAND)):
-                print ("[main] Deleting or getting does not require a datasource.")
+    if not AUTH:
+        #run commands in required order if running ALL
+        if DATASOURCE or ALL:
+            #process Datasource command
+            print("\n[main] Run datasource command: " + ('ALL' if ALL else COMMAND) + '...')
+            datasource_session = DataSource(target_url, authorized_session.getToken())
+            if 'datasource' in COMMAND:
+                datasource_session.execute(COMMAND, authorized_session.getToken())
             else:
-                print("[main] datasource_PK1:  not known... searching...")
-                datasource_session = DataSource(target_url, authenticated_session.getToken())
-                datasource_session.getDataSource(authenticated_session.getToken())
+                #datasource_session.getDataSources(authorized_session.getToken())
+                datasource_session.createDataSource(authorized_session.getToken())
                 datasource_PK1 = datasource_session.datasource_PK1
                 print("[main] datasource_PK1: " + datasource_PK1)
-                if (datasource_PK1 is None):
-                    print ("[main] data source not found, creating for demo...")
-                    datasource_session.createDataSource(authenticated_session.getToken())
+                datasource_session.getDataSource(authorized_session.getToken())
+                datasource_session.updateDataSource(authorized_session.getToken())
+
+
+        if TERM or ALL:
+            term_session = Term(target_url, authorized_session.getToken())
+            #process term command
+            print("\n[main] Run term command: " + ('ALL' if ALL else COMMAND) + '...')
+            if 'term' in COMMAND:
+                if (('delete' in COMMAND) or ('read' in COMMAND)):
+                    print ("[main] Deleting or getting does not require a datasource.")
+                else:
+                    print("[main] datasource_PK1:  not known... searching...")
+                    datasource_session = DataSource(target_url, authorized_session.getToken())
+                    datasource_session.getDataSource(authorized_session.getToken())
                     datasource_PK1 = datasource_session.datasource_PK1
+                    print("[main] datasource_PK1: " + datasource_PK1)
+                    if (datasource_PK1 is None):
+                        print ("[main] data source not found, creating for demo...")
+                        datasource_session.createDataSource(authorized_session.getToken())
+                        datasource_PK1 = datasource_session.datasource_PK1
 
-            term_session.execute(COMMAND, datasource_PK1, authenticated_session.getToken())
-        else:
-            #term_session.getTerms(authenticated_session.getToken())
-            term_session.createTerm(datasource_PK1, authenticated_session.getToken())
-            term_session.getTerm(authenticated_session.getToken())
-            term_session.updateTerm(datasource_PK1, authenticated_session.getToken())
-
-    if COURSE or ALL:
-        course_session = Course(target_url, authenticated_session.getToken())
-        #process course command
-        print("\n[main] Run course command: " + ('ALL' if ALL else COMMAND) + '...')
-        if 'course' in COMMAND:
-            if (('delete' in COMMAND) or ('read' in COMMAND)):
-                print ("[main] Deleting or getting does not require a datasource.")
+                term_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
             else:
-                print("[main] datasource_PK1:  not known... searching...")
-                datasource_session = DataSource(target_url, authenticated_session.getToken())
-                datasource_session.getDataSource(authenticated_session.getToken())
-                datasource_PK1 = datasource_session.datasource_PK1
-                print("[main] datasource_PK1: " + datasource_PK1)
-                if (datasource_PK1 is None):
-                    print ("[main] data source not found, creating for demo...")
-                    datasource_session.createDataSource(authenticated_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-            course_session.execute(COMMAND, datasource_PK1, authenticated_session.getToken())
-        else:
-            #course_session.getCourses(authenticated_session.getToken())
-            course_session.createCourse(datasource_PK1, authenticated_session.getToken())
-            course_session.getCourse(authenticated_session.getToken())
-            course_session.updateCourse(datasource_PK1, authenticated_session.getToken())
+                #term_session.getTerms(authorized_session.getToken())
+                term_session.createTerm(datasource_PK1, authorized_session.getToken())
+                term_session.getTerm(authorized_session.getToken())
+                term_session.updateTerm(datasource_PK1, authorized_session.getToken())
 
-    if USER or ALL:
-        user_session = User(target_url, authenticated_session.getToken())
-        #process user command
-        print("\n[main] Run user command: " + ('ALL' if ALL else COMMAND) + '...')
-        if 'user' in COMMAND:
-            if (('delete' in COMMAND) or ('read' in COMMAND)):
-                print ("[main] Deleting or getting does not require a datasource.")
+        if COURSE or ALL:
+            course_session = Course(target_url, authorized_session.getToken())
+            #process course command
+            print("\n[main] Run course command: " + ('ALL' if ALL else COMMAND) + '...')
+            if 'course' in COMMAND:
+                if (('delete' in COMMAND) or ('read' in COMMAND)):
+                    print ("[main] Deleting or getting does not require a datasource.")
+                else:
+                    print("[main] datasource_PK1:  not known... searching...")
+                    datasource_session = DataSource(target_url, authorized_session.getToken())
+                    datasource_session.getDataSource(authorized_session.getToken())
+                    datasource_PK1 = datasource_session.datasource_PK1
+                    print("[main] datasource_PK1: " + datasource_PK1)
+                    if (datasource_PK1 is None):
+                        print ("[main] data source not found, creating for demo...")
+                        datasource_session.createDataSource(authorized_session.getToken())
+                        datasource_PK1 = datasource_session.datasource_PK1
+                course_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
             else:
-                print("[main] datasource_PK1:  not known... searching...")
-                datasource_session = DataSource(target_url, authenticated_session.getToken())
-                datasource_session.getDataSource(authenticated_session.getToken())
-                datasource_PK1 = datasource_session.datasource_PK1
-                print("[main] datasource_PK1: " + datasource_PK1)
-                if (datasource_PK1 is None):
-                    print ("[main] data source not found, creating for demo...")
-                    datasource_session.createDataSource(authenticated_session.getToken())
+                #course_session.getCourses(authorized_session.getToken())
+                course_session.createCourse(datasource_PK1, authorized_session.getToken())
+                course_session.getCourse(authorized_session.getToken())
+                course_session.updateCourse(datasource_PK1, authorized_session.getToken())
+
+        if USER or ALL:
+            user_session = User(target_url, authorized_session.getToken())
+            #process user command
+            print("\n[main] Run user command: " + ('ALL' if ALL else COMMAND) + '...')
+            if 'user' in COMMAND:
+                if (('delete' in COMMAND) or ('read' in COMMAND)):
+                    print ("[main] Deleting or getting does not require a datasource.")
+                else:
+                    print("[main] datasource_PK1:  not known... searching...")
+                    datasource_session = DataSource(target_url, authorized_session.getToken())
+                    datasource_session.getDataSource(authorized_session.getToken())
                     datasource_PK1 = datasource_session.datasource_PK1
-            user_session.execute(COMMAND, datasource_PK1, authenticated_session.getToken())
-        else:
-            #user_session.getUsers(authenticated_session.getToken())
-            user_session.createUser(datasource_PK1, authenticated_session.getToken())
-            user_session.getUser(authenticated_session.getToken())
-            user_session.updateUser(datasource_PK1, authenticated_session.getToken())
-
-    if MEMBERSHIP or ALL:
-        membership_session = Membership(target_url, authenticated_session.getToken())
-
-        #process membership command
-        print("\n[main] Run membership command: " + ('ALL' if ALL else COMMAND) + '...')
-        if 'membership' in COMMAND:
-            if (('delete' in COMMAND) or ('read' in COMMAND)):
-                print ("[main] Deleting or getting does not require a datasource.")
+                    print("[main] datasource_PK1: " + datasource_PK1)
+                    if (datasource_PK1 is None):
+                        print ("[main] data source not found, creating for demo...")
+                    datasource_session.createDataSource(authorized_session.getToken())
+                    datasource_PK1 = datasource_session.datasource_PK1
+                    user_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
             else:
-                print("[main] datasource_PK1:  not known... searching...")
-                datasource_session = DataSource(target_url, authenticated_session.getToken())
-                datasource_session.getDataSource(authenticated_session.getToken())
-                datasource_PK1 = datasource_session.datasource_PK1
-                print("[main] datasource_PK1: " + datasource_PK1)
-                if (datasource_PK1 is None):
-                    print ("[main] data source not found, creating for demo...")
-                    datasource_session.createDataSource(authenticated_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-            membership_session.execute(COMMAND, datasource_PK1, authenticated_session.getToken())
-        else:
-            #membership_session.getMemberships(authenticated_session.getToken())
-            membership_session.createMembership(datasource_PK1, authenticated_session.getToken())
-            membership_session.getMembership(authenticated_session.getToken())
-            membership_session.updateMembership(datasource_PK1, authenticated_session.getToken())
+                #user_session.getUsers(authorized_session.getToken())
+                user_session.createUser(datasource_PK1, authorized_session.getToken())
+                user_session.getUser(authorized_session.getToken())
+                user_session.updateUser(datasource_PK1, authorized_session.getToken())
 
+        if MEMBERSHIP or ALL:
+            membership_session = Membership(target_url, authorized_session.getToken())
+
+            #process membership command
+            print("\n[main] Run membership command: " + ('ALL' if ALL else COMMAND) + '...')
+            if 'membership' in COMMAND:
+                if (('delete' in COMMAND) or ('read' in COMMAND)):
+                    print ("[main] Deleting or getting does not require a datasource.")
+                else:
+                    print("[main] datasource_PK1:  not known... searching...")
+                    datasource_session = DataSource(target_url, authorized_session.getToken())
+                    datasource_session.getDataSource(authorized_session.getToken())
+                    datasource_PK1 = datasource_session.datasource_PK1
+                    print("[main] datasource_PK1: " + datasource_PK1)
+                    if (datasource_PK1 is None):
+                        print ("[main] data source not found, creating for demo...")
+                        datasource_session.createDataSource(authorized_session.getToken())
+                        datasource_PK1 = datasource_session.datasource_PK1
+                membership_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
+            else:
+                #membership_session.getMemberships(authorized_session.getToken())
+                membership_session.createMembership(datasource_PK1, authorized_session.getToken())
+                membership_session.getMembership(authorized_session.getToken())
+                membership_session.updateMembership(datasource_PK1, authorized_session.getToken())
+                membership_session.readUserMemberships(authorized_session.getToken())
     #clean up if not using individual commands
     if ALL:
         print('\n[main] Completing Demo and deleting created objects...')
-        print "[main] Deleting membership"
-        membership_session.deleteMembership(authenticated_session.getToken())
-        print "[main] Deleting Course"
-        user_session.deleteUser(authenticated_session.getToken())
-        print "[main] Deleting Course"
-        course_session.deleteCourse(authenticated_session.getToken())
-        print "[main] Deleting Term"
-        term_session.deleteTerm(authenticated_session.getToken())
-        print "[main] Deleting DataSource"
-        datasource_session.deleteDataSource(authenticated_session.getToken())
+        print ("[main] Deleting membership")
+        membership_session.deleteMembership(authorized_session.getToken())
+        print ("[main] Deleting Course")
+        user_session.deleteUser(authorized_session.getToken())
+        print ("[main] Deleting Course")
+        course_session.deleteCourse(authorized_session.getToken())
+        print ("[main] Deleting Term")
+        term_session.deleteTerm(authorized_session.getToken())
+        print ("[main] Deleting DataSource")
+        datasource_session.deleteDataSource(authorized_session.getToken())
     else:
         print("Remember to delete created demo objects!")
 
@@ -231,7 +238,7 @@ def main(argv):
     print("[main] Processing Complete")
 
     #revoke issued Token
-    #authenticated_session.revokeToken()
+    #authorized_session.revokeToken()
 
 if __name__ == '__main__':
     main(sys.argv[1:])

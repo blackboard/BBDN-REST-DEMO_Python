@@ -30,8 +30,8 @@ class Tls1Adapter(HTTPAdapter):
 class AuthToken():
     target_url = ''
     def __init__(self, URL):
-        self.SECRET = "insert_your_application_key_here"
-        self.KEY = "insert_your_application_secret_here"
+        self.SECRET = "biExBJNI1IXiBBXpV8g01JJJjmXKHSg7"
+        self.KEY = "9cb9384a-3662-410d-9953-fe73cc374b81"
 
         self.CREDENTIALS = 'client_credentials'
         self.PAYLOAD = {

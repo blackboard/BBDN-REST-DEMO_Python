@@ -129,8 +129,6 @@ class DataSource():
         authStr = 'Bearer ' + token
         print("[DataSource:deleteDataSource()] DSKEXTERNALID: " + DSKEXTERNALID)
 
-        self.PAYLOAD = {"description":"Demo Data Source used for REST Python Demo"}
-
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 

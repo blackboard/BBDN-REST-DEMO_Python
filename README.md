@@ -23,12 +23,12 @@ You may also install Python tools for your IDE or use a text editor and terminal
 
 
 ### Included Files
-restdemo.py - this is the main script
-auth.py - this script contains the code for authenticating the application and managing tokens
-datasouce.py - this script contains examples for each of the REST endpoints for managing Data Sources in Learn
-term.py - this script contains examples for each of the REST endpoints for managing Terms in Learn
-course.py - this script contains examples for each of the REST endpoints for managing Courses in Learn
-user.py - this script contains examples for each of the REST endpoints for managing Users in Learn
+restdemo.py - this is the main script<br/>
+auth.py - this script contains the code for authenticating the application and managing tokens<br/>
+datasouce.py - this script contains examples for each of the REST endpoints for managing Data Sources in Learn<br/>
+term.py - this script contains examples for each of the REST endpoints for managing Terms in Learn<br/>
+course.py - this script contains examples for each of the REST endpoints for managing Courses in Learn<br/>
+user.py - this script contains examples for each of the REST endpoints for managing Users in Learn<br/>
 membership.py - this script contains examples for each of the REST endpoints for managing Memberships in Learn Courses
 
 

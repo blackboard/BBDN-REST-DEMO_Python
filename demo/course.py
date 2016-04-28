@@ -58,15 +58,17 @@ class Course():
 
 
     def getCourses(self, token):
-        print('[Course:getCourses] token: ' + token)
+        print('[Course:getCourses()] token: ' + token)
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-        print('[Course:getCourses] authStr: ' + authStr)
+        print('[Course:getCourses()] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
+        print("[Course:getCourses()] GET Request URL: https://" + self.target_url + self.courses_Path)
         r = session.get("https://" + self.target_url + self.courses_Path, headers={'Authorization':authStr}, verify=False)
         print("[Course:getCourses()] STATUS CODE: " + str(r.status_code) )
-        print("[Course:getCourses()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Course:getCourses()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def createCourse(self, dsk, token):
@@ -88,24 +90,27 @@ class Course():
 
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
-
+        print("[Course:createCourse()] POST Request URL: https://" + self.target_url + self.courses_Path)
+        print("[Courses:createCourse()] JSON Payload: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.post("https://" + self.target_url + self.courses_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[Course:createCourse()] STATUS CODE: " + str(r.status_code) )
-        print("[Course:createCourse()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Course:createCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def getCourse(self, token):
-        print('[Course:getCourses] token: ' + token)
+        print('[Course:getCourse()] token: ' + token)
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Course:getCourses] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
-
+        print("[Course:getCourse()] GET Request URL: https://" + self.target_url + self.courses_Path + constants.COURSEEXTERNALID)
         r = session.get("https://" + self.target_url + self.course_Path+constants.COURSEEXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[Course:getCourse()] STATUS CODE: " + str(r.status_code) )
-        print("[Course:getCourse()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Course:getCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def updateCourse(self, dsk, token):
@@ -129,11 +134,13 @@ class Course():
         }
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
-
+        print("[Course:updateCourse()] PATCH Request URL: https://" + self.target_url + self.courses_Path + constants.COURSEEXTERNALID)
+        print("[Courses:updateCourse()] Result: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.patch("https://" + self.target_url + self.course_Path+constants.COURSEEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Course:updateCourse()] STATUS CODE: " + str(r.status_code) )
-        print("[Course:updateCourse()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Course:updateCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def deleteCourse(self, token):
@@ -143,8 +150,10 @@ class Course():
 
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
-
+        print("[Course:deleteCourse()] DELETE Request URL: https://" + self.target_url + self.courses_Path + constants.COURSEEXTERNALID)
+        print("[Courses:deleteCourse()] JSON Payload: NONE REQUIRED")
         r = session.delete("https://" + self.target_url + self.course_Path+constants.COURSEEXTERNALID, headers={'Authorization':authStr}, verify=False)
 
         print("[Course:deleteCourse()] STATUS CODE: " + str(r.status_code) )
-        print("[Course:deleteCourse()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Course:deleteCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))

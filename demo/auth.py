@@ -56,10 +56,15 @@ class AuthToken():
             session.mount('https://', Tls1Adapter()) # remove for production
 
         # Authenticate
+            print("[auth:setToken] POST Request URL: " + OAUTH_URL)
+            print("[auth:setToken] JSON Payload: \n" + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
+
             r = session.post(OAUTH_URL, data=self.PAYLOAD, auth=(self.KEY, self.SECRET), verify=False)
 
             print("[auth:setToken()] STATUS CODE: " + str(r.status_code) )
-            print("[auth:setToken()] RESPONSE: " + r.text)
+            #strip quotes from result for better dumps
+            res = json.loads(r.text)
+            print("[auth:setToken()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
             if r.status_code == 200:
                 parsed_json = json.loads(r.text)
@@ -114,6 +119,8 @@ class AuthToken():
             session.mount('https://', Tls1Adapter()) # remove for production
 
         # revoke token
+            print("[auth:revokeToken] Request URL: " + revoke_URL)
+            print("[auth:revokeToken] JSON Payload: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
             r = session.post(revoke_URL, data=self.PAYLOAD, auth=(self.KEY, self.SECRET), verify=False)
 
             print("[auth:revokeToken()] STATUS CODE: " + str(r.status_code) )

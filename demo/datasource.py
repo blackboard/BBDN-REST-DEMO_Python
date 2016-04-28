@@ -63,9 +63,12 @@ class DataSource():
         print('[DataSource:getDataSources] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        print("[DataSource:getDataSources()] GET Request URL: https://" + self.target_url + self.DATASOURCES_PATH)
+        print("[DataSource:getDataSources()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + self.DATASOURCES_PATH, headers={'Authorization':authStr}, verify=False)
         print("[DataSource:getDataSources()] STATUS CODE: " + str(r.status_code) )
-        print("[DataSource:getDataSources()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[DataSource:getDataSources()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def createDataSource(self, token):
@@ -79,27 +82,35 @@ class DataSource():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
+        print("[DataSource:createDataSource()] POST Request URL: https://" + self.target_url + self.DATASOURCES_PATH)
+        print("[DataSource:createDataSource()] JSON Payload: \n" + json.dumps(self.PAYLOAD,indent=4, separators=(',', ': ')))
         r = session.post("https://" + self.target_url + self.DATASOURCES_PATH, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[DataSource:createDataSource()] STATUS CODE: " + str(r.status_code) )
-        print("[DataSource:createDataSource()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[DataSource:createDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+
         if r.status_code == 201:
             parsed_json = json.loads(r.text)
             self.datasource_PK1 = parsed_json['id']
             print ("[DataSource:createDataSource()] datasource_PK1:" + self.datasource_PK1)
 
     def getDataSource(self, token):
-        print('[DataSource:getDataSources] token: ' + token)
+        print('[DataSource:getDataSource()] token: ' + token)
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-        print('[DataSource:getDataSources] authStr: ' + authStr)
+        print('[DataSource:getDataSource()] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
+        print("[DataSource:getDataSource()] GET Request URL: https://" + self.target_url + self.DATASOURCE_PATH+DSKEXTERNALID)
+        print("[DataSource:getDataSource()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + self.DATASOURCE_PATH+DSKEXTERNALID, headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[DataSource:getDataSource()] STATUS CODE: " + str(r.status_code) )
-        print("[DataSource:getDataSource()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[DataSource:updateDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+
 
         if r.status_code == 200:
             parsed_json = json.loads(r.text)
@@ -118,10 +129,13 @@ class DataSource():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
+        print("[DataSource:updateDataSource()] PATCH Request URL: https://" + self.target_url + self.DATASOURCE_PATH + DSKEXTERNALID)
+        print("[DataSource:updateDataSource()] JSON Payload: \n" + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.patch("https://" + self.target_url + self.DATASOURCE_PATH+DSKEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[DataSource:updateDataSource()] STATUS CODE: " + str(r.status_code) )
-        print("[DataSource:updateDataSource()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[DataSource:updateDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def deleteDataSource(self, token):
@@ -132,7 +146,10 @@ class DataSource():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
+        print("[DataSource:deleteDataSource()] DELETE Request URL: https://" + self.target_url + self.DATASOURCE_PATH + DSKEXTERNALID)
+        print("[DataSource:deleteDataSource()] JSON Payload: NONE REQUIRED")
         r = session.delete("https://" + self.target_url + self.DATASOURCE_PATH+DSKEXTERNALID, headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[DataSource:deleteDataSource()] STATUS CODE: " + str(r.status_code) )
-        print("[DataSource:deleteDataSource()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[DataSource:deleteDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))

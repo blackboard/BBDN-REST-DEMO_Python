@@ -63,9 +63,14 @@ class Term():
         print('[Term:getTerms] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
+        print("[Term:getTerms()] GET Request URL: https://" + self.target_url + self.terms_Path)
+        print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + self.terms_Path, headers={'Authorization':authStr}, verify=False)
         print("[Term:getTerms()] STATUS CODE: " + str(r.status_code) )
         print("[Term:getTerms()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Term:getTerms()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+
 
 
     def createTerm(self, dsk, token):
@@ -84,10 +89,13 @@ class Term():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
+        print("[Term:createTerm()] POST Request URL: https://" + self.target_url + self.terms_Path)
+        print("[Term:createTerm()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.post("https://" + self.target_url + self.terms_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Term:createTerm()] STATUS CODE: " + str(r.status_code) )
-        print("[Term:createTerm()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Term:createTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def getTerm(self, token):
@@ -98,10 +106,13 @@ class Term():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
 
+        print("[Term:getTerms()] GET Request URL: https://" + self.target_url + self.term_Path+self.termExternalId)
+        print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + self.term_Path+self.termExternalId, headers={'Authorization':authStr},  verify=False)
 
         print("[Term:getTerm()] STATUS CODE: " + str(r.status_code) )
-        print("[Term:getTerm()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Term:getTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def updateTerm(self, dsk, token):
@@ -121,10 +132,13 @@ class Term():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
+        print("[Term:updateTerm()] PATCH Request URL: https://" + self.target_url + self.term_Path+self.termExternalId)
+        print("[Term:updateTerm()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.patch("https://" + self.target_url + self.term_Path+self.termExternalId, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Term:updateTerm()] STATUS CODE: " + str(r.status_code) )
-        print("[Term:updateTerm()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Term:updateTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def deleteTerm(self, token):
@@ -135,7 +149,11 @@ class Term():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
-        r = session.delete("https://" + self.target_url + self.term_Path+self.termExternalId, headers={'Authorization':authStr}, verify=False)
-
+        print("[Term:getTerms()] DELETE Request URL: https://" + self.target_url + self.term_Path+self.termExternalId)
+        print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
+        #r = session.delete("https://" + self.target_url + self.term_Path+self.termExternalId, headers={'Authorization':authStr}, verify=False)
+        r = session.delete("https://" + self.target_url + "/_24_1", headers={'Authorization':authStr}, verify=False)
         print("[Term:deleteTerm()] STATUS CODE: " + str(r.status_code) )
-        print("[Term:deleteTerm()] RESPONSE: " + r.text)
+        print("[Term:deleteTerm()] RESPONSE: \n" + r.text)
+        #res = json.loads(r.text)
+        #print("[Term:deleteTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))

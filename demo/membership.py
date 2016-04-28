@@ -75,9 +75,12 @@ class Membership():
         memberships_Path = self.memberships_Path
         memberships_Path = memberships_Path.replace("courseId", replacement)
 
+        print("[Membership:getMemberships()] GET Request URL: https://" + self.target_url + memberships_Path)
+        print("[Membership:getMemberships()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.get("https://" + self.target_url + memberships_Path, headers={'Authorization':authStr}, verify=False)
         print("[Membership:getMemberships()] STATUS CODE: " + str(r.status_code) )
-        print("[Membership:getMemberships()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Membership:getMemberships()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def createMembership(self, dsk, token):
@@ -103,9 +106,12 @@ class Membership():
         replacement = "externalId:" + USEREXTERNALID
         membership_Path = membership_Path.replace("userId", replacement)
 
+        print("[Membership:getMemberships()] PUT Request URL: https://" + self.target_url + membership_Path)
+        print("[Membership:getMemberships()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.put("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[Membership:createMembership()] STATUS CODE: " + str(r.status_code) )
-        print("[Membership:createMembership()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Membership:createMembership()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def getMembership(self, token):
@@ -124,9 +130,12 @@ class Membership():
         replacement = "externalId:" + USEREXTERNALID
         membership_Path = membership_Path.replace("userId", replacement)
 
+        print("[Membership:getMemberships()] GET Request URL: https://" + self.target_url + membership_Path)
+        print("[Membership:getMemberships()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + membership_Path, headers={'Authorization':authStr},  verify=False)
         print("[Membership:getMembership()] STATUS CODE: " + str(r.status_code) )
-        print("[Membership:getMembership()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Membership:getMembership()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def readUserMemberships(self, token):
@@ -141,10 +150,12 @@ class Membership():
         replacement = "externalId:" + USEREXTERNALID
         userMemberships_Path = self.userMembships_Path
         userMemberships_Path = userMemberships_Path.replace("userId", replacement)
-        print('[Membership:readUserMemberships] userMemberships_Path: ' + userMemberships_Path)
+        print("[Membership:getMemberships()] GET Request URL: https://" + self.target_url + userMemberships_Path)
+        print("[Membership:getMemberships()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + userMemberships_Path, headers={'Authorization':authStr},  verify=False)
         print("[Membership:readUserMemberships()] STATUS CODE: " + str(r.status_code) )
-        print("[Membership:readUserMemberships()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Membership:readUserMemberships()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
 
@@ -170,9 +181,12 @@ class Membership():
         replacement = "externalId:" + USEREXTERNALID
         membership_Path = membership_Path.replace("userId", replacement)
 
+        print("[Membership:getMemberships()] Request URL: https://" + self.target_url + membership_Path)
+        print("[Membership:getMemberships()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.patch("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[Membership:updateMembership()] STATUS CODE: " + str(r.status_code) )
-        print("[Membership:updateMembership()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Membership:updateMembership()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
 
 
     def deleteMembership(self, token):
@@ -189,6 +203,9 @@ class Membership():
         replacement = "externalId:" + USEREXTERNALID
         membership_Path = membership_Path.replace("userId", replacement)
 
+        print("[Membership:getMemberships()] DELETE Request URL: https://" + self.target_url + membership_Path)
+        print("[Membership:getMemberships()] JSON Payload: NONE REQUIRED")
         r = session.delete("https://" + self.target_url + membership_Path, headers={'Authorization':authStr}, verify=False)
         print("[Membership:deleteMembership()] STATUS CODE: " + str(r.status_code) )
-        print("[Membership:deleteMembership()] RESPONSE: " + r.text)
+        res = json.loads(r.text)
+        print("[Membership:deleteMembership()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))

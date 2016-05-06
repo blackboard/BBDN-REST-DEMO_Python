@@ -42,12 +42,12 @@ class DataSource():
         if "create" in command:
             print('[DataSource:execute] : ' + command)
             self.createDataSource(token)
-        elif "read" in command:
-            print('[DataSource:execute] : ' + command)
-            self.getDataSource(token)
         elif "read_all" in command:
             print('[DataSource:execute] : ' + command)
             self.getDataSources(token)
+        elif "read" in command:
+            print('[DataSource:execute] : ' + command)
+            self.getDataSource(token)
         elif "update" in command:
             print('[DataSource:execute] : ' + command)
             self.updateDataSource(token)
@@ -67,36 +67,48 @@ class DataSource():
         print("[DataSource:getDataSources()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + self.DATASOURCES_PATH, headers={'Authorization':authStr}, verify=False)
         print("[DataSource:getDataSources()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[DataSource:getDataSources()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[DataSource:getDataSources()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def createDataSource(self, token):
         #"Authorization: Bearer $token"
-        authStr = 'Bearer ' + token
-        self.PAYLOAD = {
-            "externalId":DSKEXTERNALID,
-            "description":"Data Source used for REST demo"
-        }
+        authStr = "Bearer " + token
+        self.PAYLOAD = {"externalId":"%s" % DSKEXTERNALID, "description":"Data Source used for REST demo"}
 
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         print("[DataSource:createDataSource()] POST Request URL: https://" + self.target_url + self.DATASOURCES_PATH)
         print("[DataSource:createDataSource()] JSON Payload: \n" + json.dumps(self.PAYLOAD,indent=4, separators=(',', ': ')))
-        r = session.post("https://" + self.target_url + self.DATASOURCES_PATH, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
-
-        print("[DataSource:createDataSource()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[DataSource:createDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
-        if r.status_code == 201:
-            parsed_json = json.loads(r.text)
-            self.datasource_PK1 = parsed_json['id']
-            print ("[DataSource:createDataSource()] datasource_PK1:" + self.datasource_PK1)
+        
+        try:
+            r = session.post("https://" + self.target_url + self.DATASOURCES_PATH, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+            print("[DataSource:createDataSource()] STATUS CODE: " + str(r.status_code) )
+            print("[DataSource:createDataSource()] RESPONSE:")
+            if r.text:
+                res = json.loads(r.text)
+                print(json.dumps(res,indent=4, separators=(',', ': ')))
+                parsed_json = json.loads(r.text)
+                self.datasource_PK1 = parsed_json['id']
+                print ("[DataSource:createDataSource()] datasource_PK1:" + self.datasource_PK1)
+                print ("[DataSource:createDataSource()] datasource_externalId:" + parsed_json['externalId'])
+            else:
+                print("NONE")
+            
+            
+            if r.status_code == 429:
+                print("[datasource:getDataSource] Error 429 Too Many Requests. Exiting.")
+                sys.exit(2)
+        except requests.RequestException:
+            print("[datasource:createDataSource()] Error cannot connect to requested server. Exiting.\n")
+            sys.exit(2)
 
     def getDataSource(self, token):
-        print('[DataSource:getDataSource()] token: ' + token)
+        #print('[DataSource:getDataSource()] token: ' + token)
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[DataSource:getDataSource()] authStr: ' + authStr)
@@ -108,9 +120,12 @@ class DataSource():
         r = session.get("https://" + self.target_url + self.DATASOURCE_PATH+DSKEXTERNALID, headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[DataSource:getDataSource()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[DataSource:updateDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[DataSource:getDataSource()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
         if r.status_code == 200:
             parsed_json = json.loads(r.text)
@@ -134,8 +149,12 @@ class DataSource():
         r = session.patch("https://" + self.target_url + self.DATASOURCE_PATH+DSKEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[DataSource:updateDataSource()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[DataSource:updateDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+        print("[DataSource:updateDataSource()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
 
     def deleteDataSource(self, token):
@@ -151,5 +170,15 @@ class DataSource():
         r = session.delete("https://" + self.target_url + self.DATASOURCE_PATH+DSKEXTERNALID, headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[DataSource:deleteDataSource()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[DataSource:deleteDataSource()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+        print("[DataSource:deleteDataSource()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
+            
+    def checkDataSource(self, token):
+        self.getDataSource(token)
+        if not self.datasource_PK1:
+            print("[datasource::checkDataSource] Data Source %s does not exist, creating." % DSKEXTERNALID)
+            self.createDataSource(token)

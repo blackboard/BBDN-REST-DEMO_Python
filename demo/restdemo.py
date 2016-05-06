@@ -14,6 +14,7 @@ from term import Term
 from course import Course
 from user import User
 from membership import Membership
+from constants import *
 
 import sys
 import getopt
@@ -33,6 +34,7 @@ def main(argv):
     CLEANUP = False
 
     datasource_PK1 = None
+    datasource_session = None
 
     usageStr = "\nrestdemo.py -t|--target <target root URL> -c|--command <command>\n"
     usageStr += "e.g restdemo.py -t www.myschool.edu -c create_course\n"
@@ -112,14 +114,14 @@ def main(argv):
             if 'datasource' in COMMAND:
                 datasource_session.execute(COMMAND, authorized_session.getToken())
             else:
-                #datasource_session.getDataSources(authorized_session.getToken())
+                if not datasource_session:
+                    datasource_session.checkDataSource(authorized_session.getToken())
+                    datasource_PK1 = datasource_session.datasource_PK1
                 datasource_session.createDataSource(authorized_session.getToken())
-                datasource_PK1 = datasource_session.datasource_PK1
-                print("[main] datasource_PK1: " + datasource_PK1)
                 datasource_session.getDataSource(authorized_session.getToken())
+                datasource_session.getDataSources(authorized_session.getToken())
                 datasource_session.updateDataSource(authorized_session.getToken())
-
-
+                
         if TERM or ALL:
             term_session = Term(target_url, authorized_session.getToken())
             #process term command
@@ -128,22 +130,17 @@ def main(argv):
                 if (('delete' in COMMAND) or ('read' in COMMAND)):
                     print ("[main] Deleting or getting does not require a datasource.")
                 else:
-                    print("[main] datasource_PK1:  not known... searching...")
-                    datasource_session = DataSource(target_url, authorized_session.getToken())
-                    datasource_session.getDataSource(authorized_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-                    print("[main] datasource_PK1: " + datasource_PK1)
-                    if (datasource_PK1 is None):
-                        print ("[main] data source not found, creating for demo...")
-                        datasource_session.createDataSource(authorized_session.getToken())
-                        datasource_PK1 = datasource_session.datasource_PK1
+                    if not datasource_PK1:
+                        print("[main] confirm datasource.")
+                        datasource_session = DataSource(target_url, authorized_session.getToken())
+                        datasource_session.checkDataSource(authorized_session.getToken())
 
-                term_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
+                term_session.execute(COMMAND, "externalId:"+TERMEXTERNALID, authorized_session.getToken())
             else:
-                #term_session.getTerms(authorized_session.getToken())
-                term_session.createTerm(datasource_PK1, authorized_session.getToken())
+                term_session.getTerms(authorized_session.getToken())
+                term_session.createTerm("externalId:"+DSKEXTERNALID, authorized_session.getToken())
                 term_session.getTerm(authorized_session.getToken())
-                term_session.updateTerm(datasource_PK1, authorized_session.getToken())
+                term_session.updateTerm("externalId:"+DSKEXTERNALID, authorized_session.getToken())
 
         if COURSE or ALL:
             course_session = Course(target_url, authorized_session.getToken())
@@ -153,21 +150,17 @@ def main(argv):
                 if (('delete' in COMMAND) or ('read' in COMMAND)):
                     print ("[main] Deleting or getting does not require a datasource.")
                 else:
-                    print("[main] datasource_PK1:  not known... searching...")
-                    datasource_session = DataSource(target_url, authorized_session.getToken())
-                    datasource_session.getDataSource(authorized_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-                    print("[main] datasource_PK1: " + datasource_PK1)
-                    if (datasource_PK1 is None):
-                        print ("[main] data source not found, creating for demo...")
-                        datasource_session.createDataSource(authorized_session.getToken())
-                        datasource_PK1 = datasource_session.datasource_PK1
-                course_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
+                    if not datasource_PK1:
+                        print("[main] confirm datasource.")
+                        datasource_session = DataSource(target_url, authorized_session.getToken())
+                        datasource_session.checkDataSource(authorized_session.getToken())
+
+                course_session.execute(COMMAND, "externalId:"+DSKEXTERNALID, authorized_session.getToken())
             else:
-                #course_session.getCourses(authorized_session.getToken())
-                course_session.createCourse(datasource_PK1, authorized_session.getToken())
+                course_session.getCourses(authorized_session.getToken())
+                course_session.createCourse("externalId:"+DSKEXTERNALID, authorized_session.getToken())
                 course_session.getCourse(authorized_session.getToken())
-                course_session.updateCourse(datasource_PK1, authorized_session.getToken())
+                course_session.updateCourse("externalId:"+DSKEXTERNALID, authorized_session.getToken())
 
         if USER or ALL:
             user_session = User(target_url, authorized_session.getToken())
@@ -177,21 +170,17 @@ def main(argv):
                 if (('delete' in COMMAND) or ('read' in COMMAND)):
                     print ("[main] Deleting or getting does not require a datasource.")
                 else:
-                    print("[main] datasource_PK1:  not known... searching...")
-                    datasource_session = DataSource(target_url, authorized_session.getToken())
-                    datasource_session.getDataSource(authorized_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-                    print("[main] datasource_PK1: " + datasource_PK1)
-                    if (datasource_PK1 is None):
-                        print ("[main] data source not found, creating for demo...")
-                    datasource_session.createDataSource(authorized_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-                    user_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
+                    if not datasource_PK1:
+                        print("[main] confirm datasource.")
+                        datasource_session = DataSource(target_url, authorized_session.getToken())
+                        datasource_session.checkDataSource(authorized_session.getToken())
+                    
+                user_session.execute(COMMAND, "externalId:"+DSKEXTERNALID, authorized_session.getToken())
             else:
-                #user_session.getUsers(authorized_session.getToken())
-                user_session.createUser(datasource_PK1, authorized_session.getToken())
+                user_session.getUsers(authorized_session.getToken())
+                user_session.createUser("externalId:"+DSKEXTERNALID, authorized_session.getToken())
                 user_session.getUser(authorized_session.getToken())
-                user_session.updateUser(datasource_PK1, authorized_session.getToken())
+                user_session.updateUser("externalId:"+DSKEXTERNALID, authorized_session.getToken())
 
         if MEMBERSHIP or ALL:
             membership_session = Membership(target_url, authorized_session.getToken())
@@ -202,21 +191,17 @@ def main(argv):
                 if (('delete' in COMMAND) or ('read' in COMMAND)):
                     print ("[main] Deleting or getting does not require a datasource.")
                 else:
-                    print("[main] datasource_PK1:  not known... searching...")
-                    datasource_session = DataSource(target_url, authorized_session.getToken())
-                    datasource_session.getDataSource(authorized_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-                    print("[main] datasource_PK1: " + datasource_PK1)
-                    if (datasource_PK1 is None):
-                        print ("[main] data source not found, creating for demo...")
-                        datasource_session.createDataSource(authorized_session.getToken())
-                        datasource_PK1 = datasource_session.datasource_PK1
-                membership_session.execute(COMMAND, datasource_PK1, authorized_session.getToken())
+                    if not datasource_PK1:
+                        print("[main] confirm datasource.")
+                        datasource_session = DataSource(target_url, authorized_session.getToken())
+                        datasource_session.checkDataSource(authorized_session.getToken())
+
+                membership_session.execute(COMMAND, "externalId:"+DSKEXTERNALID, authorized_session.getToken())
             else:
-                #membership_session.getMemberships(authorized_session.getToken())
-                membership_session.createMembership(datasource_PK1, authorized_session.getToken())
+                membership_session.getMemberships(authorized_session.getToken())
+                membership_session.createMembership("externalId:"+DSKEXTERNALID, authorized_session.getToken())
                 membership_session.getMembership(authorized_session.getToken())
-                membership_session.updateMembership(datasource_PK1, authorized_session.getToken())
+                membership_session.updateMembership("externalId:"+DSKEXTERNALID, authorized_session.getToken())
                 membership_session.readUserMemberships(authorized_session.getToken())
     #clean up if not using individual commands
     if ALL:
@@ -232,7 +217,7 @@ def main(argv):
         print ("[main] Deleting DataSource")
         datasource_session.deleteDataSource(authorized_session.getToken())
     else:
-        print("Remember to delete created demo objects!")
+        print("\nRemember to delete created demo objects!")
 
 
     print("[main] Processing Complete")

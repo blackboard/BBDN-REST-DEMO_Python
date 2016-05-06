@@ -1,0 +1,676 @@
+[main] Target is: localhost:9877
+[main] Command is: 
+[main] Empty Command: Run All
+
+
+[main] Acquiring auth token...
+
+[auth:setToken] POST Request URL: https://localhost:9877/learn/api/public/v1/oauth2/token
+[auth:setToken] JSON Payload: 
+{
+    "grant_type": "client_credentials"
+}
+[auth:setToken()] STATUS CODE: 200
+[auth:setToken()] RESPONSE: 
+{
+    "access_token": "nePkgqkVg362tFd0KkOIRDWYBCmbwXJT",
+    "expires_in": 2490,
+    "token_type": "bearer"
+}
+[auth:setToken()] Token Expires at 22:21:16
+[auth:setToken()] TOKEN: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.99992
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.999668
+
+[main] Returned token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+
+
+[main] Run datasource command: ALL...
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.999636
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.999602
+[DataSource:createDataSource()] POST Request URL: https://localhost:9877/learn/api/public/v1/dataSources
+[DataSource:createDataSource()] JSON Payload: 
+{
+    "externalId": "BBDN-PYTHON-REST-DEMO-DSK",
+    "description": "Data Source used for REST demo"
+}
+[DataSource:createDataSource()] STATUS CODE: 201
+[DataSource:createDataSource()] RESPONSE:
+{
+    "externalId": "BBDN-PYTHON-REST-DEMO-DSK",
+    "id": "_26_1",
+    "description": "Data Source used for REST demo"
+}
+[DataSource:createDataSource()] datasource_PK1:_26_1
+[DataSource:createDataSource()] datasource_externalId:BBDN-PYTHON-REST-DEMO-DSK
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.968235
+[DataSource:getDataSource()] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[DataSource:getDataSource()] GET Request URL: https://localhost:9877/learn/api/public/v1/dataSources/externalId:BBDN-PYTHON-REST-DEMO-DSK
+[DataSource:getDataSource()] JSON Payload: NONE REQUIRED
+[DataSource:getDataSource()] STATUS CODE: 200
+[DataSource:getDataSource()] RESPONSE:
+{
+    "externalId": "BBDN-PYTHON-REST-DEMO-DSK",
+    "id": "_26_1",
+    "description": "Data Source used for REST demo"
+}
+[DataSource:getDataSource()] datasource_PK1:_26_1
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.942019
+[DataSource:getDataSources] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[DataSource:getDataSources] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[DataSource:getDataSources()] GET Request URL: https://localhost:9877/learn/api/public/v1/dataSources
+[DataSource:getDataSources()] JSON Payload: NONE REQUIRED
+[DataSource:getDataSources()] STATUS CODE: 200
+[DataSource:getDataSources()] RESPONSE:
+{
+    "results": [
+        {
+            "externalId": "INTERNAL",
+            "id": "_1_1",
+            "description": "Internal data source used for associating records that are created for use by the Bb system."
+        },
+        {
+            "externalId": "SYSTEM",
+            "id": "_2_1",
+            "description": "System data source used for associating records that are created via web browser."
+        },
+        {
+            "externalId": "REPLICATED",
+            "id": "_3_1",
+            "description": "Replicated data source used for root administrator."
+        },
+        {
+            "externalId": "BBDN-OBJECTGEN-DSK",
+            "id": "_5_1",
+            "description": "Data Source used for REST demo"
+        },
+        {
+            "externalId": "BBDN-PYTHON-REST-DEMO-DSK",
+            "id": "_26_1",
+            "description": "Data Source used for REST demo"
+        }
+    ],
+    "paging": {}
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.916893
+[DataSource:updateDataSource()] DSKEXTERNALID: BBDN-PYTHON-REST-DEMO-DSK
+[DataSource:updateDataSource()] PATCH Request URL: https://localhost:9877/learn/api/public/v1/dataSources/externalId:BBDN-PYTHON-REST-DEMO-DSK
+[DataSource:updateDataSource()] JSON Payload: 
+{
+    "description": "Demo Data Source used for REST Python Demo"
+}
+[DataSource:updateDataSource()] STATUS CODE: 200
+[DataSource:updateDataSource()] RESPONSE:
+{
+    "externalId": "BBDN-PYTHON-REST-DEMO-DSK",
+    "id": "_26_1",
+    "description": "Demo Data Source used for REST Python Demo"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.883425
+
+[main] Run term command: ALL...
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.883396
+[Term:getTerms] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Term:getTerms] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Term:getTerms()] GET Request URL: https://localhost:9877/learn/api/public/v1/terms
+[Term:getTerms()] JSON Payload: NONE REQUIRED
+[Term:getTerms()] STATUS CODE: 200
+[Term:getTerms()] RESPONSE:
+{
+    "results": [],
+    "paging": {}
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.851287
+[Term:createTerm()] POST Request URL: https://localhost:9877/learn/api/public/v1/terms
+[Term:createTerm()] JSON Payload: {
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "externalId": "BBDN-PYTHON-REST-DEMO-TERM",
+    "availability": {
+        "duration": "Continuous"
+    },
+    "description": "Term used for REST demo",
+    "name": "REST Demo Term"
+}
+[Term:createTerm()] STATUS CODE: 201
+[Term:createTerm()] RESPONSE:
+{
+    "dataSourceId": "_26_1",
+    "id": "_17_1",
+    "description": "Term used for REST demo",
+    "externalId": "BBDN-PYTHON-REST-DEMO-TERM",
+    "availability": {
+        "available": "No",
+        "duration": {
+            "type": "Continuous"
+        }
+    },
+    "name": "REST Demo Term"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.814567
+[Term:getTerm()] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Term:getTerm()] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Term:getTerm()] GET Request URL: https://localhost:9877/learn/api/public/v1/terms/externalId:BBDN-PYTHON-REST-DEMO-TERM
+[Term:getTerm()] JSON Payload: NONE REQUIRED
+[Term:getTerm()] STATUS CODE: 200
+[Term:getTerm()] RESPONSE:
+{
+    "dataSourceId": "_26_1",
+    "id": "_17_1",
+    "description": "Term used for REST demo",
+    "externalId": "BBDN-PYTHON-REST-DEMO-TERM",
+    "availability": {
+        "available": "No",
+        "duration": {
+            "type": "Continuous"
+        }
+    },
+    "name": "REST Demo Term"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.777643
+[Term:updateTerm()] Term ExternalId: BBDN-PYTHON-REST-DEMO-TERM
+[Term:updateTerm()] PATCH Request URL: https://localhost:9877/learn/api/public/v1/terms/externalId:BBDN-PYTHON-REST-DEMO-TERM
+[Term:updateTerm()] JSON Payload: {
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "externalId": "BBDN-PYTHON-REST-DEMO-TERM",
+    "availability": {
+        "duration": "continuous"
+    },
+    "description": "Term used for REST Python demo",
+    "name": "REST Python Demo Term"
+}
+[Term:updateTerm()] STATUS CODE: 200
+[Term:updateTerm()] RESPONSE:
+{
+    "dataSourceId": "_26_1",
+    "id": "_17_1",
+    "description": "Term used for REST Python demo",
+    "externalId": "BBDN-PYTHON-REST-DEMO-TERM",
+    "availability": {
+        "available": "No",
+        "duration": {
+            "type": "Continuous"
+        }
+    },
+    "name": "REST Python Demo Term"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.739894
+
+[main] Run course command: ALL...
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.739858
+[Course:getCourses()] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Course:getCourses()] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Course:getCourses()] GET Request URL: https://localhost:9877/learn/api/public/v1/courses
+[Course:getCourses()] STATUS CODE: 500
+[Course:getCourses()] RESPONSE:
+{
+    "extraInfo": "1dc73332dc3e49b694945cbe2f131aef",
+    "status": 500
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.676832
+[Course:createCourse()] POST Request URL: https://localhost:9877/learn/api/public/v1/courses
+[Courses:createCourse()] JSON Payload: 
+ {
+    "readOnly": "false",
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "courseId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "allowGuests": "true",
+    "description": "Course used for REST demo",
+    "externalId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "availability": {
+        "duration": "continuous"
+    },
+    "name": "Course used for REST demo"
+}
+[Course:createCourse()] STATUS CODE: 201
+[Course:createCourse()] RESPONSE:
+{
+    "created": "2016-05-06T01:39:46.417Z",
+    "externalId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "allowGuests": true,
+    "enrollment": {
+        "type": "InstructorLed"
+    },
+    "id": "_247_1",
+    "ultraStatus": "Classic",
+    "readOnly": false,
+    "dataSourceId": "_26_1",
+    "courseId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "availability": {
+        "available": "Yes",
+        "duration": {
+            "type": "Continuous"
+        }
+    },
+    "uuid": "f365dce5547247a19a789d7a75977a7d",
+    "description": "Course used for REST demo",
+    "locale": {
+        "force": false
+    },
+    "organization": false,
+    "name": "Course used for REST demo"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.507602
+[Course:getCourse()] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Course:getCourses] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Course:getCourse()] GET Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO
+[Course:getCourse()] STATUS CODE: 200
+[Course:getCourse()] RESPONSE:
+{
+    "created": "2016-05-06T01:39:46.417Z",
+    "externalId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "allowGuests": true,
+    "enrollment": {
+        "type": "InstructorLed"
+    },
+    "id": "_247_1",
+    "ultraStatus": "Classic",
+    "readOnly": false,
+    "dataSourceId": "_26_1",
+    "courseId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "availability": {
+        "available": "Yes",
+        "duration": {
+            "type": "Continuous"
+        }
+    },
+    "uuid": "f365dce5547247a19a789d7a75977a7d",
+    "description": "Course used for REST demo",
+    "locale": {
+        "force": false
+    },
+    "organization": false,
+    "name": "Course used for REST demo"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.433645
+[Course:updateCourse()] COURSEEXTERNALID: BBDN-PYTHON-REST-COURSE-DEMO
+[Course:updateCourse()] PATCH Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO
+[Courses:updateCourse()] Result: 
+ {
+    "readOnly": "false",
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "courseId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "allowGuests": "true",
+    "description": "Course used for REST Python demo",
+    "externalId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "availability": {
+        "available": "Yes",
+        "duration": "continuous"
+    },
+    "name": "Course used for REST Python demo"
+}
+[Course:updateCourse()] STATUS CODE: 200
+[Course:updateCourse()] RESPONSE:
+{
+    "created": "2016-05-06T01:39:46.417Z",
+    "externalId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "allowGuests": true,
+    "enrollment": {
+        "type": "InstructorLed"
+    },
+    "id": "_247_1",
+    "ultraStatus": "Classic",
+    "readOnly": false,
+    "dataSourceId": "_26_1",
+    "courseId": "BBDN-PYTHON-REST-COURSE-DEMO",
+    "availability": {
+        "available": "Yes",
+        "duration": {
+            "type": "Continuous"
+        }
+    },
+    "uuid": "f365dce5547247a19a789d7a75977a7d",
+    "description": "Course used for REST Python demo",
+    "locale": {
+        "force": false
+    },
+    "organization": false,
+    "name": "Course used for REST Python demo"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.344583
+
+[main] Run user command: ALL...
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.34454
+[User:getUsers] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[User:getUsers] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[User:getUsers()] GET Request URL: https://localhost:9877/learn/api/public/v1/users
+[User:getUsers()] JSON Payload: NONE REQUIRED
+[User:getUsers()] STATUS CODE: 200
+[User:getUsers()] RESPONSE:
+{
+    "results": [
+        {
+            "created": "2016-04-15T14:46:53.034Z",
+            "externalId": "administrator",
+            "gender": "Unknown",
+            "educationLevel": "Unknown",
+            "userName": "administrator",
+            "id": "_1_1",
+            "lastLogin": "2016-05-05T13:24:48.289Z",
+            "systemRoleIds": [
+                "SystemAdmin"
+            ],
+            "dataSourceId": "_1_1",
+            "uuid": "217aaa7edd10437897e2a04ddd753745",
+            "contact": {
+                "email": "dev@bbdn.local"
+            },
+            "availability": {
+                "available": "Yes"
+            },
+            "name": {
+                "family": "Administrator",
+                "given": "Blackboard"
+            }
+        },
+        {
+            "systemRoleIds": [
+                "Guest"
+            ],
+            "dataSourceId": "_1_1",
+            "created": "2016-04-15T14:46:53.041Z",
+            "id": "_2_1",
+            "uuid": "04da89569e1e46f099fa9f1b8f85decb",
+            "name": {
+                "family": "Guest",
+                "given": "Blackboard"
+            },
+            "educationLevel": "Unknown",
+            "availability": {
+                "available": "Yes"
+            },
+            "externalId": "guest",
+            "userName": "guest",
+            "gender": "Unknown"
+        }
+    ],
+    "paging": {}
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.255238
+[User:createUser()] POST Request URL: https://localhost:9877/learn/api/public/v1/users
+[User:createUser()] JSON Payload: {
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "userName": "python_demo",
+    "contact": {
+        "email": "no.one@ereh.won"
+    },
+    "externalId": "BBDN-PYTHON-REST-DEMO-USER",
+    "password": "python61",
+    "availability": {
+        "available": "Yes"
+    },
+    "name": {
+        "family": "Demo",
+        "given": "Python"
+    }
+}
+[User:createUser()] STATUS CODE: 201
+[User:createUser()] RESPONSE:
+{
+    "created": "2016-05-06T01:39:46.829Z",
+    "externalId": "BBDN-PYTHON-REST-DEMO-USER",
+    "gender": "Unknown",
+    "educationLevel": "Unknown",
+    "userName": "python_demo",
+    "id": "_2992_1",
+    "systemRoleIds": [
+        "User"
+    ],
+    "dataSourceId": "_26_1",
+    "uuid": "ca1f640be1274fe4a6b94f199b8845f0",
+    "contact": {
+        "email": "no.one@ereh.won"
+    },
+    "availability": {
+        "available": "Yes"
+    },
+    "name": {
+        "family": "Demo",
+        "given": "Python"
+    }
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.161891
+[User:getUser()] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[User:getUser()] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[User:getUser()] GET Request URL: https://localhost:9877/learn/api/public/v1/users/externalId:BBDN-PYTHON-REST-DEMO-USER
+[User:getUser()] JSON Payload: NONE REQUIRED
+[User:getUser()] STATUS CODE: 200
+[User:getUser()] RESPONSE:
+{
+    "created": "2016-05-06T01:39:46.829Z",
+    "externalId": "BBDN-PYTHON-REST-DEMO-USER",
+    "gender": "Unknown",
+    "educationLevel": "Unknown",
+    "userName": "python_demo",
+    "id": "_2992_1",
+    "systemRoleIds": [
+        "User"
+    ],
+    "dataSourceId": "_26_1",
+    "uuid": "ca1f640be1274fe4a6b94f199b8845f0",
+    "contact": {
+        "email": "no.one@ereh.won"
+    },
+    "availability": {
+        "available": "Yes"
+    },
+    "name": {
+        "family": "Demo",
+        "given": "Python"
+    }
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2489.107579
+[User:updateUser()] USEREXTERNALID: BBDN-PYTHON-REST-DEMO-USER
+[User:updateUser()] PATCH Request URL: https://localhost:9877/learn/api/public/v1/users/externalId:BBDN-PYTHON-REST-DEMO-USER
+[User:updateUser()] JSON Payload: {
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "userName": "python_demo",
+    "contact": {
+        "email": "no.one@ereh.won"
+    },
+    "externalId": "BBDN-PYTHON-REST-DEMO-USER",
+    "password": "python16",
+    "availability": {
+        "available": "Yes"
+    },
+    "name": {
+        "family": "BbDN",
+        "middle": "Demo",
+        "given": "Python"
+    }
+}
+[User:updateUser()] STATUS CODE: 200
+[User:updateUser()] RESPONSE:
+{
+    "created": "2016-05-06T01:39:46.829Z",
+    "externalId": "BBDN-PYTHON-REST-DEMO-USER",
+    "gender": "Unknown",
+    "educationLevel": "Unknown",
+    "userName": "python_demo",
+    "id": "_2992_1",
+    "systemRoleIds": [
+        "User"
+    ],
+    "dataSourceId": "_26_1",
+    "uuid": "ca1f640be1274fe4a6b94f199b8845f0",
+    "contact": {
+        "email": "no.one@ereh.won"
+    },
+    "availability": {
+        "available": "Yes"
+    },
+    "name": {
+        "family": "BbDN",
+        "middle": "Demo",
+        "given": "Python"
+    }
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.974833
+
+[main] Run membership command: ALL...
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.974796
+[Membership:getMemberships] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Membership:getMemberships] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Membership:getMemberships()] GET Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO/users
+[Membership:getMemberships()] JSON Payload:  NONE REQUIRED
+[Membership:getMemberships()] STATUS CODE: 200
+[Membership:getMemberships()] RESPONSE:
+{
+    "results": [],
+    "paging": {}
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.909327
+[Membership:getMemberships()] PUT Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO/users/externalId:BBDN-PYTHON-REST-DEMO-USER
+[Membership:getMemberships()] JSON Payload: {
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "courseRoleId": "Instructor",
+    "availability": {
+        "available": "Yes"
+    }
+}
+[Membership:getMemberships()] STATUS CODE: 201
+[Membership:getMemberships()] RESPONSE:
+{
+    "dataSourceId": "_26_1",
+    "courseId": "_247_1",
+    "userId": "_2992_1",
+    "created": "2016-05-06T01:39:47.164Z",
+    "availability": {
+        "available": "Yes"
+    },
+    "courseRoleId": "Instructor"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.862439
+[Membership:getMemberships] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Membership:getMemberships] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Membership:getMemberships()] GET Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO/users/externalId:BBDN-PYTHON-REST-DEMO-USER
+[Membership:getMemberships()] JSON Payload: NONE REQUIRED
+[Membership:getMembership()] STATUS CODE: 200
+[Membership:getMembership()] RESPONSE:
+{
+    "dataSourceId": "_26_1",
+    "courseId": "_247_1",
+    "userId": "_2992_1",
+    "created": "2016-05-06T01:39:47.164Z",
+    "availability": {
+        "available": "Yes"
+    },
+    "courseRoleId": "Instructor"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.820152
+[Membership:updateMembership()] Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO/users/externalId:BBDN-PYTHON-REST-DEMO-USER
+[Membership:updateMembership()] JSON Payload: {
+    "dataSourceId": "externalId:BBDN-PYTHON-REST-DEMO-DSK",
+    "courseRoleId": "Student",
+    "availability": {
+        "available": "No"
+    }
+}
+[Membership:updateMembership()] STATUS CODE: 200
+[Membership:updateMembership()] RESPONSE:
+{
+    "dataSourceId": "_26_1",
+    "courseId": "_247_1",
+    "userId": "_2992_1",
+    "created": "2016-05-06T01:39:47.164Z",
+    "availability": {
+        "available": "No"
+    },
+    "courseRoleId": "Student"
+}
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.774491
+[Membership:readUserMemberships] token: nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Membership:readUserMemberships] authStr: Bearer nePkgqkVg362tFd0KkOIRDWYBCmbwXJT
+[Membership:readUserMemberships()] GET Request URL: https://localhost:9877/learn/api/public/v1/users/externalId:BBDN-PYTHON-REST-DEMO-USER/courses
+[Membership:readUserMemberships()] JSON Payload: NONE REQUIRED
+[Membership:readUserMemberships()] STATUS CODE: 200
+[Membership:readUserMemberships()] RESPONSE:
+{
+    "results": [
+        {
+            "dataSourceId": "_26_1",
+            "courseId": "_247_1",
+            "userId": "_2992_1",
+            "created": "2016-05-06T01:39:47.164Z",
+            "availability": {
+                "available": "No"
+            },
+            "courseRoleId": "Student"
+        }
+    ],
+    "paging": {}
+}
+
+[main] Completing Demo and deleting created objects...
+[main] Deleting membership
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.711551
+[Membership:deleteMembership()] DELETE Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO/users/externalId:BBDN-PYTHON-REST-DEMO-USER
+[Membership:deleteMembership()] JSON Payload: NONE REQUIRED
+[Membership:deleteMembership()] STATUS CODE: 204
+[Membership:deleteMembership()] RESPONSE:
+NONE
+[main] Deleting Course
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.644389
+[User:deleteUser()] USEREXTERNALID: BBDN-PYTHON-REST-DEMO-USER
+[User:deleteUser()] DELETE Request URL: https://localhost:9877/learn/api/public/v1/users/externalId:BBDN-PYTHON-REST-DEMO-USER
+[User:deleteUser()] JSON Payload: NONE REQUIRED
+[User:deleteUser()] STATUS CODE: 204
+[User:deleteUser()] RESPONSE:
+NONE
+[main] Deleting Course
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.578688
+[Course:deleteCourse()] COURSEEXTERNALID: BBDN-PYTHON-REST-COURSE-DEMO
+[Course:deleteCourse()] DELETE Request URL: https://localhost:9877/learn/api/public/v1/courses/externalId:BBDN-PYTHON-REST-COURSE-DEMO
+[Courses:deleteCourse()] JSON Payload: NONE REQUIRED
+[Course:deleteCourse()] STATUS CODE: 204
+[Course:deleteCourse()] RESPONSE:
+NONE
+[main] Deleting Term
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.472199
+[Term:deleteTerm()] Term ExternalId: BBDN-PYTHON-REST-DEMO-TERM
+[Term:getTerms()] DELETE Request URL: https://localhost:9877/learn/api/public/v1/terms/externalId:BBDN-PYTHON-REST-DEMO-TERM
+[Term:getTerms()] JSON Payload: NONE REQUIRED
+[Term:deleteTerm()] STATUS CODE: 204
+[Term:deleteTerm()] RESPONSE:
+NONE
+[main] Deleting DataSource
+[auth:isExpired()] Token Expires at 22:21:16
+[auth:isExpired()] Time Left on Token (in seconds): 2488.438067
+[DataSource:deleteDataSource()] DSKEXTERNALID: BBDN-PYTHON-REST-DEMO-DSK
+[DataSource:deleteDataSource()] DELETE Request URL: https://localhost:9877/learn/api/public/v1/dataSources/externalId:BBDN-PYTHON-REST-DEMO-DSK
+[DataSource:deleteDataSource()] JSON Payload: NONE REQUIRED
+[DataSource:deleteDataSource()] STATUS CODE: 204
+[DataSource:deleteDataSource()] RESPONSE:
+NONE
+[main] Processing Complete

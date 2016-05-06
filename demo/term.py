@@ -34,20 +34,18 @@ class Term():
         self.token = token
         self.terms_Path = '/learn/api/public/v1/terms' #create(POST)/get(GET)
         self.term_Path = '/learn/api/public/v1/terms/externalId:'
-        self.dskExternalId = 'BbDN-DSK'
-        self.termExternalId = TERMEXTERNALID #'BBDN-PYTHON-REST-DEMO-TERM'
 
 
     def execute(self, command, dsk, token):
         if "create" in command:
             print('[Term:execute] : ' + command)
             self.createTerm(dsk, token)
-        elif "read" in command:
-            print('[Term:execute] : ' + command)
-            self.getTerm(token)
         elif "read_all" in command:
             print('[Term:execute] : ' + command)
             self.getTerms(token)
+        elif "read" in command:
+            print('[Term:execute] : ' + command)
+            self.getTerm(token)
         elif "update" in command:
             print('[Term:execute] : ' + command)
             self.updateTerm(dsk, token)
@@ -67,18 +65,20 @@ class Term():
         print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + self.terms_Path, headers={'Authorization':authStr}, verify=False)
         print("[Term:getTerms()] STATUS CODE: " + str(r.status_code) )
-        print("[Term:getTerms()] RESPONSE: " + r.text)
-        res = json.loads(r.text)
-        print("[Term:getTerms()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Term:getTerms()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
 
     def createTerm(self, dsk, token):
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         self.PAYLOAD = {
-            "externalId":self.termExternalId,
-            "dataSourceId": dsk, #self.dskExternalId, Supported soon.
+            "externalId":TERMEXTERNALID,
+            "dataSourceId": "externalId:%s" % DSKEXTERNALID,  
             "name":"REST Demo Term",
             "description": "Term used for REST demo",
             "availability": {
@@ -94,35 +94,41 @@ class Term():
         r = session.post("https://" + self.target_url + self.terms_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Term:createTerm()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Term:createTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Term:createTerm()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def getTerm(self, token):
-        print('[Term:getTerms] token: ' + token)
+        print('[Term:getTerm()] token: ' + token)
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-        print('[Term:getTerms] authStr: ' + authStr)
+        print('[Term:getTerm()] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
 
-        print("[Term:getTerms()] GET Request URL: https://" + self.target_url + self.term_Path+self.termExternalId)
-        print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
-        r = session.get("https://" + self.target_url + self.term_Path+self.termExternalId, headers={'Authorization':authStr},  verify=False)
+        print("[Term:getTerm()] GET Request URL: https://" + self.target_url + self.term_Path+TERMEXTERNALID)
+        print("[Term:getTerm()] JSON Payload: NONE REQUIRED")
+        r = session.get("https://" + self.target_url + self.term_Path+TERMEXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[Term:getTerm()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Term:getTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Term:getTerm()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def updateTerm(self, dsk, token):
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-        print("[Term:updateTerm()] self.termExternalId: " + self.termExternalId)
+        print("[Term:updateTerm()] Term ExternalId: " + TERMEXTERNALID)
 
         self.PAYLOAD = {
-            "externalId":self.termExternalId,
-            "dataSourceId": dsk, #self.dskExternalId, #Supported soon
+            "externalId":TERMEXTERNALID,
+            "dataSourceId": "externalId:%s" % DSKEXTERNALID, 
             "name":"REST Python Demo Term",
             "description": "Term used for REST Python demo",
             "availability": {
@@ -132,28 +138,34 @@ class Term():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
-        print("[Term:updateTerm()] PATCH Request URL: https://" + self.target_url + self.term_Path+self.termExternalId)
+        print("[Term:updateTerm()] PATCH Request URL: https://" + self.target_url + self.term_Path+TERMEXTERNALID)
         print("[Term:updateTerm()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.patch("https://" + self.target_url + self.term_Path+self.termExternalId, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = session.patch("https://" + self.target_url + self.term_Path+TERMEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Term:updateTerm()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Term:updateTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Term:updateTerm()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def deleteTerm(self, token):
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-        print("[Term:deleteTerm()] self.termExternalId: " + self.termExternalId)
+        print("[Term:deleteTerm()] Term ExternalId: " + TERMEXTERNALID)
 
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
-        print("[Term:getTerms()] DELETE Request URL: https://" + self.target_url + self.term_Path+self.termExternalId)
+        print("[Term:getTerms()] DELETE Request URL: https://" + self.target_url + self.term_Path+TERMEXTERNALID)
         print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
         #r = session.delete("https://" + self.target_url + self.term_Path+self.termExternalId, headers={'Authorization':authStr}, verify=False)
-        r = session.delete("https://" + self.target_url + "/_24_1", headers={'Authorization':authStr}, verify=False)
+        r = session.delete("https://" + self.target_url+self.term_Path+TERMEXTERNALID, headers={'Authorization':authStr}, verify=False)
         print("[Term:deleteTerm()] STATUS CODE: " + str(r.status_code) )
-        print("[Term:deleteTerm()] RESPONSE: \n" + r.text)
-        #res = json.loads(r.text)
-        #print("[Term:deleteTerm()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+        print("[Term:deleteTerm()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")

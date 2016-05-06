@@ -41,12 +41,12 @@ class User():
         if "create" in command:
             print('[User:execute] : ' + command)
             self.createUser(dsk, token)
-        elif "read" in command:
-            print('[User:execute] : ' + command)
-            self.getUser(token)
         elif "read_all" in command:
             print('[User:execute] : ' + command + "not implemented on server")
             #self.getUsers(token)
+        elif "read" in command:
+            print('[User:execute] : ' + command)
+            self.getUser(token)
         elif "update" in command:
             print('[User:execute] : ' + command)
             self.updateUser(dsk, token)
@@ -66,8 +66,12 @@ class User():
         print("[User:getUsers()] JSON Payload: NONE REQUIRED")
         r = session.get("https://" + self.target_url + self.users_Path, headers={'Authorization':authStr}, verify=False)
         print("[User:getUsers()] STATUS CODE: " + str(r.status_code) )
-        print("[User:getUsers()] RESPONSE: \n" + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-
+        print("[User:getUsers()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def createUser(self, dsk, token):
         #"Authorization: Bearer $token"
@@ -97,8 +101,12 @@ class User():
         print("[User:createUser()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.post("https://" + self.target_url + self.users_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[User:createUser()] STATUS CODE: " + str(r.status_code) )
-        print("[User:createUser()] RESPONSE: \n" + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-
+        print("[User:createUser()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def getUser(self, token):
         print('[User:getUser()] token: ' + token)
@@ -113,8 +121,12 @@ class User():
         r = session.get("https://" + self.target_url + self.user_Path+USEREXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[User:getUser()] STATUS CODE: " + str(r.status_code) )
-        print("[User:getUser()] RESPONSE: \n" + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-
+        print("[User:getUser()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def updateUser(self, dsk, token):
         #"Authorization: Bearer $token"
@@ -146,9 +158,12 @@ class User():
         r = session.patch("https://" + self.target_url + self.user_Path+USEREXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[User:updateUser()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[User:updateUser()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[User:updateUser()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def deleteUser(self, token):
         #"Authorization: Bearer $token"
@@ -163,5 +178,9 @@ class User():
         r = session.delete("https://" + self.target_url + self.user_Path+USEREXTERNALID, headers={'Authorization':authStr}, verify=False)
 
         print("[User:deleteUser()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[User:deleteUser()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+        print("[User:deleteUser()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")

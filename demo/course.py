@@ -14,7 +14,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
 import ssl
 import sys
-import constants
+from constants import *
 
 requests.packages.urllib3.disable_warnings()
 
@@ -67,17 +67,21 @@ class Course():
         print("[Course:getCourses()] GET Request URL: https://" + self.target_url + self.courses_Path)
         r = session.get("https://" + self.target_url + self.courses_Path, headers={'Authorization':authStr}, verify=False)
         print("[Course:getCourses()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Course:getCourses()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Course:getCourses()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def createCourse(self, dsk, token):
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
+
         self.PAYLOAD = {
-            "externalId":constants.COURSEEXTERNALID,
-            "dataSourceId": dsk, #self.dskExternalId, Supported soon.
-            "courseId":constants.COURSEEXTERNALID,
+            "externalId": COURSEEXTERNALID,
+            "dataSourceId": "externalId:%s" % DSKEXTERNALID,
+            "courseId": COURSEEXTERNALID,
             "name":"Course used for REST demo",
             "description":"Course used for REST demo",
             "allowGuests":"true",
@@ -94,9 +98,12 @@ class Course():
         print("[Courses:createCourse()] JSON Payload: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         r = session.post("https://" + self.target_url + self.courses_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[Course:createCourse()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Course:createCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Course:createCourse()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def getCourse(self, token):
         print('[Course:getCourse()] token: ' + token)
@@ -105,23 +112,26 @@ class Course():
         print('[Course:getCourses] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
-        print("[Course:getCourse()] GET Request URL: https://" + self.target_url + self.courses_Path + constants.COURSEEXTERNALID)
-        r = session.get("https://" + self.target_url + self.course_Path+constants.COURSEEXTERNALID, headers={'Authorization':authStr},  verify=False)
+        print("[Course:getCourse()] GET Request URL: https://" + self.target_url + self.course_Path + COURSEEXTERNALID)
+        r = session.get("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[Course:getCourse()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Course:getCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Course:getCourse()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def updateCourse(self, dsk, token):
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-        print("[Course:updateCourse()] COURSEEXTERNALID: " + constants.COURSEEXTERNALID)
+        print("[Course:updateCourse()] COURSEEXTERNALID: " + COURSEEXTERNALID)
 
         self.PAYLOAD = {
-            "externalId":constants.COURSEEXTERNALID,
-            "dataSourceId": dsk, #self.dskExternalId, Supported soon.
-            "courseId":constants.COURSEEXTERNALID,
+            "externalId":COURSEEXTERNALID,
+            "dataSourceId": "externalId:%s" % DSKEXTERNALID, 
+            "courseId":COURSEEXTERNALID,
             "name":"Course used for REST Python demo",
             "description":"Course used for REST Python demo",
             "allowGuests":"true",
@@ -134,26 +144,33 @@ class Course():
         }
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
-        print("[Course:updateCourse()] PATCH Request URL: https://" + self.target_url + self.courses_Path + constants.COURSEEXTERNALID)
+        print("[Course:updateCourse()] PATCH Request URL: https://" + self.target_url + self.course_Path + COURSEEXTERNALID)
         print("[Courses:updateCourse()] Result: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.patch("https://" + self.target_url + self.course_Path+constants.COURSEEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = session.patch("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Course:updateCourse()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Course:updateCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
-
+        print("[Course:updateCourse()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")
 
     def deleteCourse(self, token):
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
-        print("[Course:deleteCourse()] COURSEEXTERNALID: " + constants.COURSEEXTERNALID)
+        print("[Course:deleteCourse()] COURSEEXTERNALID: " + COURSEEXTERNALID)
 
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
-        print("[Course:deleteCourse()] DELETE Request URL: https://" + self.target_url + self.courses_Path + constants.COURSEEXTERNALID)
+        print("[Course:deleteCourse()] DELETE Request URL: https://" + self.target_url + self.course_Path + COURSEEXTERNALID)
         print("[Courses:deleteCourse()] JSON Payload: NONE REQUIRED")
-        r = session.delete("https://" + self.target_url + self.course_Path+constants.COURSEEXTERNALID, headers={'Authorization':authStr}, verify=False)
+        r = session.delete("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, headers={'Authorization':authStr}, verify=False)
 
         print("[Course:deleteCourse()] STATUS CODE: " + str(r.status_code) )
-        res = json.loads(r.text)
-        print("[Course:deleteCourse()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',', ': ')))
+        print("[Course:deleteCourse()] RESPONSE:")
+        if r.text:
+            res = json.loads(r.text)
+            print(json.dumps(res,indent=4, separators=(',', ': ')))
+        else:
+            print("NONE")

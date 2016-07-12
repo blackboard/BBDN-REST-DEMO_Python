@@ -20,6 +20,7 @@ requests.packages.urllib3.disable_warnings()
 
 #Tls1Adapter allows for connection to sites with non-CA/self-signed
 #  certificates e.g.: Learn Dev VM
+# May be removed if you migrated the cert as outlined in auth.py
 class Tls1Adapter(HTTPAdapter):
     def init_poolmanager(self, connections, maxsize, block=False):
         self.poolmanager = PoolManager(num_pools=connections,
@@ -34,6 +35,8 @@ class User():
         self.token = token
         self.users_Path = '/learn/api/public/v1/users' #create(POST)/get(GET)
         self.user_Path = '/learn/api/public/v1/users/externalId:'
+        self.users_Path_Params = "?limit=%s&fields=%s" % (PAGINATIONLIMIT, USERGETFIELDS)
+
 
 
 
@@ -42,8 +45,8 @@ class User():
             print('[User:execute] : ' + command)
             self.createUser(dsk, token)
         elif "read_all" in command:
-            print('[User:execute] : ' + command + "not implemented on server")
-            #self.getUsers(token)
+            print('[User:execute] : ' + command)
+            self.getUsers(token)
         elif "read" in command:
             print('[User:execute] : ' + command)
             self.getUser(token)
@@ -56,22 +59,43 @@ class User():
 
 
     def getUsers(self, token):
+        #demo limits returned page count to constants.PAGINATIONLIMIT and
+        #limits result data fields to constants.USERGETFIELDS
         print('[User:getUsers] token: ' + token)
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[User:getUsers] authStr: ' + authStr)
         session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
-        print("[User:getUsers()] GET Request URL: https://" + self.target_url + self.users_Path)
-        print("[User:getUsers()] JSON Payload: NONE REQUIRED")
-        r = session.get("https://" + self.target_url + self.users_Path, headers={'Authorization':authStr}, verify=False)
-        print("[User:getUsers()] STATUS CODE: " + str(r.status_code) )
-        print("[User:getUsers()] RESPONSE:")
-        if r.text:
-            res = json.loads(r.text)
-            print(json.dumps(res,indent=4, separators=(',', ': ')))
-        else:
-            print("NONE")
+        #session.mount('https://', Tls1Adapter()) # remove for production
+
+        nextPage = True
+        nextpageURL = None
+        while nextPage:
+            print ("[User:getUsers()] ENTERING WHILE LOOP FOR NEXT PAGE CHECK")
+            print ("[User:getUsers()] NEXTPAGE: %s" % nextPage)
+            print ("[User:getUsers()] NEXTPAGEURL: %s" % nextpageURL)
+            if nextpageURL:
+                print ("[User:getUsers()] NEXTPAGE: %s, so update URL parameters." % nextPage)
+                self.users_Path_Params = nextpageURL.replace(self.users_Path, '')
+                print ("[User:getUsers()] UPDATED URL PARAMS: %s" %self.users_Path_Params)
+            print("[User:getUsers()] GET Request URL: https://" + self.target_url + self.users_Path + self.users_Path_Params)
+            print("[User:getUsers()] JSON Payload: NONE REQUIRED")
+            r = session.get("https://" + self.target_url + self.users_Path + self.users_Path_Params, headers={'Authorization':authStr}, verify=False)
+
+            print("[User:getUsers()] STATUS CODE: " + str(r.status_code) )
+            print("[User:getUsers()] RESPONSE:")
+            if r.text:
+                res = json.loads(r.text)
+                print(json.dumps(res,indent=4, separators=(',', ': ')))
+                try:
+                    nextpageURL = res['paging']['nextPage']
+                    nextPage=True
+                except KeyError as err:
+                    nextPage=False
+                    nextpageURL=None
+                    print ("[User:getUsers()] No (more) records.")
+            else:
+                print("NONE")
 
     def createUser(self, dsk, token):
         #"Authorization: Bearer $token"

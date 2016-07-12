@@ -8,6 +8,38 @@ Neither the name of Blackboard Inc. nor the names of its contributors may be use
 THIS SOFTWARE IS PROVIDED BY BLACKBOARD INC ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL BLACKBOARD INC. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
+"""
+PYTHON and Self-signed certificates:
+    To enable code to recognize the DVM self signed certificate you have to provide Python
+    with the public Key 
+
+    1. Start the DVM and ssh into it...
+    $ vagrant up
+    $ vagrant ssh
+    2. Copy the keystore password from the config file
+    $ cd /usr/local/blackboard/config
+    $ more /usr/local/blackboard/config/bb-config.properties
+        find the keystore password and copy it - you will use this in step 3 for 
+        exporting the pem file
+    3. Export the cert and keys 
+    $ cd /usr/local/blackboard/config/keystores
+    $ keytool -exportcert -alias tomcat -keystore tomcat.keystore -rfc -file /vagrant/keytool_crt.pem
+    4. Make sure you can read the file:
+    $ openssl x509 -in /vagrant/keytool_crt.pem -inform pem -noout -text
+    4. copy the .pem file to a location your project can access it.
+    5. update config.py to point to your .pem file
+    6. add dev.bbdn.local to your hosts file and save:
+        127.0.0.1	localhost dev.bbdn.local
+    7. test access to to your DVM using dev.bbdn.local, if it doesn't work restart and retry
+
+    now for all requests against your DVM the pem will be used to verify the server
+    NOTE: that for production code you should change 'verify=CERTPATH' to 'verify=False' if 
+    not using the server derived .pem file, or remove 'verify=...' completely if using 
+    commercial certificates.
+    see http://docs.python-requests.org/en/master/user/advanced/ for more information on 
+    SSL sessions in Python.
+"""
+
 import json
 import requests
 from requests.adapters import HTTPAdapter
@@ -17,9 +49,11 @@ import time
 #from datetime import now
 import ssl
 import sys
+from constants import *
 
 #Tls1Adapter allows for connection to sites with non-CA/self-signed
 #  certificates e.g.: Learn Dev VM
+# May be removed if you migrated the cert as outlined in auth.py
 class Tls1Adapter(HTTPAdapter):
     def init_poolmanager(self, connections, maxsize, block=False):
         self.poolmanager = PoolManager(num_pools=connections,
@@ -29,10 +63,14 @@ class Tls1Adapter(HTTPAdapter):
 
 class AuthToken():
     target_url = ''
+
     def __init__(self, URL):
         
-        self.SECRET = "biExBJNI1IXiBBXpV8g01JJJjmXKHSg7" #Example Only. Change to your secret
-        self.KEY = "9cb9384a-3662-410d-9953-fe73cc374b81"#Example Only. Change to your key
+        self.KEY = "8907d3c7-b43c-4e52-864c-ba43e0a1f23f"
+        self.SECRET = "tgyDtZxV1Nw0uNX2ZUOK5pbvTt0j2ybK"
+
+        #self.SECRET = "biExBJNI1IXiBBXpV8g01JJJjmXKHSg7" #Example Only. Change to your secret
+        #self.KEY = "9cb9384a-3662-410d-9953-fe73cc374b81"#Example Only. Change to your key
 
         self.CREDENTIALS = 'client_credentials'
         self.PAYLOAD = {
@@ -41,6 +79,7 @@ class AuthToken():
         self.TOKEN = None
         self.target_url = URL
         self.EXPIRES_AT = ''
+        self.cert_path='./trusted/keytool_crt.pem'
 
     def getKey(self):
         return self.KEY
@@ -54,13 +93,14 @@ class AuthToken():
 
         if self.TOKEN is None:
             session = requests.session()
-            session.mount('https://', Tls1Adapter()) # remove for production
+            #session.mount('https://', Tls1Adapter()) # remove for production
 
         # Authenticate
             print("[auth:setToken] POST Request URL: " + OAUTH_URL)
             print("[auth:setToken] JSON Payload: \n" + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-
+            #r = requests.post(url, data=data, verify='/path/to/public_key.pem')
             r = session.post(OAUTH_URL, data=self.PAYLOAD, auth=(self.KEY, self.SECRET), verify=False)
+#            r = session.post(OAUTH_URL, data=self.PAYLOAD, auth=(self.KEY, self.SECRET), verify=CERTPATH)
 
             print("[auth:setToken()] STATUS CODE: " + str(r.status_code) )
             #strip quotes from result for better dumps
@@ -122,7 +162,7 @@ class AuthToken():
         # revoke token
             print("[auth:revokeToken] Request URL: " + revoke_URL)
             print("[auth:revokeToken] JSON Payload: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-            r = session.post(revoke_URL, data=self.PAYLOAD, auth=(self.KEY, self.SECRET), verify=False)
+            r = session.post(revoke_URL, data=self.PAYLOAD, auth=(self.KEY, self.SECRET), verify=CERTPATH)
 
             print("[auth:revokeToken()] STATUS CODE: " + str(r.status_code) )
             print("[auth:revokeToken()] RESPONSE: " + r.text)

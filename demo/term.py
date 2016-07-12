@@ -20,6 +20,7 @@ requests.packages.urllib3.disable_warnings()
 
 #Tls1Adapter allows for connection to sites with non-CA/self-signed
 #  certificates e.g.: Learn Dev VM
+# May be removed if you migrated the cert as outlined in auth.py
 class Tls1Adapter(HTTPAdapter):
     def init_poolmanager(self, connections, maxsize, block=False):
         self.poolmanager = PoolManager(num_pools=connections,
@@ -34,6 +35,8 @@ class Term():
         self.token = token
         self.terms_Path = '/learn/api/public/v1/terms' #create(POST)/get(GET)
         self.term_Path = '/learn/api/public/v1/terms/externalId:'
+        self.terms_Path_Params = "?limit=%s&fields=%s" % (PAGINATIONLIMIT, TERMSGETFIELDS)
+
 
 
     def execute(self, command, dsk, token):
@@ -61,16 +64,38 @@ class Term():
         print('[Term:getTerms] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
-        print("[Term:getTerms()] GET Request URL: https://" + self.target_url + self.terms_Path)
-        print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
-        r = session.get("https://" + self.target_url + self.terms_Path, headers={'Authorization':authStr}, verify=False)
-        print("[Term:getTerms()] STATUS CODE: " + str(r.status_code) )
-        print("[Term:getTerms()] RESPONSE:")
-        if r.text:
-            res = json.loads(r.text)
-            print(json.dumps(res,indent=4, separators=(',', ': ')))
-        else:
-            print("NONE")
+
+        nextPage = True
+        nextpageURL = None
+        while nextPage:
+            print ("[Term:getTerms()] ENTERING WHILE LOOP FOR NEXT PAGE CHECK")
+            print ("[Term:getTerms()] NEXTPAGE: %s" % nextPage)
+            print ("[Term:getTerms()] NEXTPAGEURL: %s" % nextpageURL)
+            if nextpageURL:
+                print ("[Term:getTerms()] NEXTPAGE: %s, so update URL parameters." % nextPage)
+                self.terms_Path_Params = nextpageURL.replace(self.terms_Path, '')
+                print ("[Term:getTerms()] UPDATED URL PARAMS: %s" %self.terms_Path_Params)
+            print("[Term:getTerms()] GET Request URL: https://" + self.target_url + self.terms_Path + self.terms_Path_Params)
+            print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
+            r = session.get("https://" + self.target_url + self.terms_Path + self.terms_Path_Params, headers={'Authorization':authStr}, verify=False)
+
+            print("[Term:getTerms()] STATUS CODE: " + str(r.status_code) )
+            print("[Term:getTerms()] RESPONSE:")
+            if r.text:
+                res = json.loads(r.text)
+                print(json.dumps(res,indent=4, separators=(',', ': ')))
+                try:
+                    nextpageURL = res['paging']['nextPage']
+                    nextPage=True
+                    #continue to process records here before retrieving more
+                except KeyError as err:
+                    nextPage=False
+                    nextpageURL=None
+                    print ("[Term:getTerms()] No (more) records.")
+            else:
+                print("NONE")
+
+
 
 
     def createTerm(self, dsk, token):
@@ -78,7 +103,7 @@ class Term():
         authStr = 'Bearer ' + token
         self.PAYLOAD = {
             "externalId":TERMEXTERNALID,
-            "dataSourceId": "externalId:%s" % DSKEXTERNALID,  
+            "dataSourceId": "externalId:%s" % DSKEXTERNALID,
             "name":"REST Demo Term",
             "description": "Term used for REST demo",
             "availability": {
@@ -128,7 +153,7 @@ class Term():
 
         self.PAYLOAD = {
             "externalId":TERMEXTERNALID,
-            "dataSourceId": "externalId:%s" % DSKEXTERNALID, 
+            "dataSourceId": "externalId:%s" % DSKEXTERNALID,
             "name":"REST Python Demo Term",
             "description": "Term used for REST Python demo",
             "availability": {

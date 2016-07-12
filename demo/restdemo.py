@@ -39,9 +39,9 @@ def main(argv):
     usageStr = "\nrestdemo.py -t|--target <target root URL> -c|--command <command>\n"
     usageStr += "e.g restdemo.py -t www.myschool.edu -c create_course\n"
     usageStr += "command: <command>_<object> where <command> is one of the following:\n"
-    usageStr += "\tcreate, read, read_all, update, delete\n"
+    usageStr += "\tcreate, read, read_all_, read_all_course_memberships, read_all_user_memberships, update, delete\n"
     usageStr += "and <object> is one of the following:\n"
-    usageStr += "\tdatasource, term, course, user, membership\n"
+    usageStr += "\tdatasource, term, course, user\n"
     usageStr += "-t is required; No -c args will run demo in predetermined order.\n"
     usageStr += "'-c authorize' demomonstrates the authorization process and does not create objects."
     usageStr += "-c commands require a valid datasource PK1 - \n"
@@ -80,12 +80,12 @@ def main(argv):
     if "course" in COMMAND:
         print("[main] Run course command")
         COURSE = True
-    elif "user" in COMMAND:
-        print("[main] Run user command")
-        USER = True
     elif "membership" in COMMAND:
         print("[main] Run membership command")
         MEMBERSHIP = True
+    elif "user" in COMMAND:
+        print("[main] Run user command")
+        USER = True
     elif "term" in COMMAND:
         print("[main] Run term command")
         TERM = True
@@ -98,7 +98,6 @@ def main(argv):
     else:
         print("[main] Empty Command: Run All\n")
         ALL = True
-
 
     print ('\n[main] Acquiring auth token...\n')
     authorized_session = AuthToken(target_url)
@@ -114,14 +113,16 @@ def main(argv):
             if 'datasource' in COMMAND:
                 datasource_session.execute(COMMAND, authorized_session.getToken())
             else:
-                if not datasource_session:
+                if not datasource_PK1:
                     datasource_session.checkDataSource(authorized_session.getToken())
                     datasource_PK1 = datasource_session.datasource_PK1
-                datasource_session.createDataSource(authorized_session.getToken())
+                    print("[main] datasource_PK1: %s" % datasource_PK1)
+                    if not datasource_PK1:
+                        datasource_session.createDataSource(authorized_session.getToken())
                 datasource_session.getDataSource(authorized_session.getToken())
                 datasource_session.getDataSources(authorized_session.getToken())
                 datasource_session.updateDataSource(authorized_session.getToken())
-                
+
         if TERM or ALL:
             term_session = Term(target_url, authorized_session.getToken())
             #process term command
@@ -174,7 +175,7 @@ def main(argv):
                         print("[main] confirm datasource.")
                         datasource_session = DataSource(target_url, authorized_session.getToken())
                         datasource_session.checkDataSource(authorized_session.getToken())
-                    
+
                 user_session.execute(COMMAND, "externalId:"+DSKEXTERNALID, authorized_session.getToken())
             else:
                 user_session.getUsers(authorized_session.getToken())
@@ -198,9 +199,9 @@ def main(argv):
 
                 membership_session.execute(COMMAND, "externalId:"+DSKEXTERNALID, authorized_session.getToken())
             else:
-                membership_session.getMemberships(authorized_session.getToken())
+                membership_session.getCourseMemberships(authorized_session.getToken())
                 membership_session.createMembership("externalId:"+DSKEXTERNALID, authorized_session.getToken())
-                membership_session.getMembership(authorized_session.getToken())
+                membership_session.getUserMemberships(authorized_session.getToken())
                 membership_session.updateMembership("externalId:"+DSKEXTERNALID, authorized_session.getToken())
                 membership_session.readUserMemberships(authorized_session.getToken())
     #clean up if not using individual commands

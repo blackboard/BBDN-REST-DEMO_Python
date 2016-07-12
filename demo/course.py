@@ -9,6 +9,7 @@ THIS SOFTWARE IS PROVIDED BY BLACKBOARD INC ``AS IS'' AND ANY EXPRESS OR IMPLIED
 """
 
 import json
+import html
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
@@ -20,6 +21,7 @@ requests.packages.urllib3.disable_warnings()
 
 #Tls1Adapter allows for connection to sites with non-CA/self-signed
 #  certificates e.g.: Learn Dev VM
+# May be removed if you migrated the cert as outlined in auth.py
 class Tls1Adapter(HTTPAdapter):
     def init_poolmanager(self, connections, maxsize, block=False):
         self.poolmanager = PoolManager(num_pools=connections,
@@ -34,6 +36,7 @@ class Course():
         self.token = token
         self.courses_Path = '/learn/api/public/v1/courses' #create(POST)/get(GET)
         self.course_Path = '/learn/api/public/v1/courses/externalId:'
+        self.courses_Path_Params = "?limit=%s&fields=%s" % (PAGINATIONLIMIT, COURSEGETFIELDS)
         self.termId = None
 
 
@@ -43,12 +46,12 @@ class Course():
         if "create" in command:
             print('[Course:execute] : ' + command)
             self.createCourse(dsk, token)
+        elif "read_all" in command:
+            print('[Course:execute] : ' + command)
+            self.getCourses(token)
         elif "read" in command:
             print('[Course:execute] : ' + command)
             self.getCourse(token)
-        elif "read_all" in command:
-            print('[Course:execute] : ' + command + "not implemented on server")
-            #self.getCourses(token)
         elif "update" in command:
             print('[Course:execute] : ' + command)
             self.updateCourse(dsk, token)
@@ -58,21 +61,46 @@ class Course():
 
 
     def getCourses(self, token):
+        #demo limits returned page count to constants.PAGINATIONLIMIT and
+        #limits result data fields to constants.COURSEGETFIELDS
         print('[Course:getCourses()] token: ' + token)
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Course:getCourses()] authStr: ' + authStr)
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
-        print("[Course:getCourses()] GET Request URL: https://" + self.target_url + self.courses_Path)
-        r = session.get("https://" + self.target_url + self.courses_Path, headers={'Authorization':authStr}, verify=False)
-        print("[Course:getCourses()] STATUS CODE: " + str(r.status_code) )
-        print("[Course:getCourses()] RESPONSE:")
-        if r.text:
-            res = json.loads(r.text)
-            print(json.dumps(res,indent=4, separators=(',', ': ')))
-        else:
-            print("NONE")
+
+        nextPage = True
+        nextpageURL = None
+        while nextPage:
+            print ("[Course:getCourses()] ENTERING WHILE LOOP FOR NEXT PAGE CHECK")
+            print ("[Course:getCourses()] NEXTPAGE: %s" % nextPage)
+            print ("[Course:getCourses()] NEXTPAGEURL: %s" % nextpageURL)
+            if nextpageURL:
+                print ("[Course:getCourses()] NEXTPAGE: %s, so update URL parameters." % nextPage)
+                self.courses_Path_Params = nextpageURL.replace(self.courses_Path, '')
+                print ("[Course:getCourses()] UPDATED URL PARAMS: %s" %self.courses_Path_Params)
+            print("[Course:getCourses()] GET Request URL: https://" + self.target_url + self.courses_Path + self.courses_Path_Params)
+            print("[Course:getCourses()] JSON Payload: NONE REQUIRED")
+            r = session.get("https://" + self.target_url + self.courses_Path + self.courses_Path_Params, headers={'Authorization':authStr}, verify=False)
+
+            print("[Course:getCourses()] STATUS CODE: " + str(r.status_code) )
+            print("[Course:getCourses()] RESPONSE:")
+            if r.text:
+                res = json.loads(r.text)
+                print(json.dumps(res,indent=4, separators=(',', ': ')))
+                try:
+                    nextpageURL = res['paging']['nextPage']
+                    nextPage=True
+                    #continue to process records here before retrieving more
+                except KeyError as err:
+                    nextPage=False
+                    nextpageURL=None
+                    print ("[Course:getCourses()] No (more) records.")
+            else:
+                print("NONE")
+
+
 
     def createCourse(self, dsk, token):
         #"Authorization: Bearer $token"
@@ -86,7 +114,6 @@ class Course():
             "description":"Course used for REST demo",
             "allowGuests":"true",
             "readOnly": "false",
-            #"termId":constants.TERMEXTERNALID,
             "availability": {
                 "duration":"continuous"
             }
@@ -113,6 +140,7 @@ class Course():
         session = requests.session()
         session.mount('https://', Tls1Adapter()) # remove for production
         print("[Course:getCourse()] GET Request URL: https://" + self.target_url + self.course_Path + COURSEEXTERNALID)
+
         r = session.get("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[Course:getCourse()] STATUS CODE: " + str(r.status_code) )
@@ -122,6 +150,7 @@ class Course():
             print(json.dumps(res,indent=4, separators=(',', ': ')))
         else:
             print("NONE")
+        done = False
 
     def updateCourse(self, dsk, token):
         #"Authorization: Bearer $token"
@@ -130,7 +159,7 @@ class Course():
 
         self.PAYLOAD = {
             "externalId":COURSEEXTERNALID,
-            "dataSourceId": "externalId:%s" % DSKEXTERNALID, 
+            "dataSourceId": "externalId:%s" % DSKEXTERNALID,
             "courseId":COURSEEXTERNALID,
             "name":"Course used for REST Python demo",
             "description":"Course used for REST Python demo",

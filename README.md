@@ -98,4 +98,4 @@ Once you have setup your test server and changed auth.py to reflect your applica
 
 
 ### Conclusion
-For a thorough walkthrough of this code, visit the corresponding Blackboard Developer Community <a href="https://docs.blackboard.com/learn/REST/REST%20Demo%20Using%20Python.html">REST Demo Using Python</a>.
+For a thorough walkthrough of this code, visit the corresponding Blackboard Developer Community documentation <a href="https://docs.blackboard.com/learn/REST/REST%20Demo%20Using%20Python.html">REST Demo Using Python</a>.

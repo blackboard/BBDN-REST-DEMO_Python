@@ -62,8 +62,8 @@ class Term():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Term:getTerms] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         nextPage = True
         nextpageURL = None
@@ -77,7 +77,7 @@ class Term():
                 print ("[Term:getTerms()] UPDATED URL PARAMS: %s" %self.terms_Path_Params)
             print("[Term:getTerms()] GET Request URL: https://" + self.target_url + self.terms_Path + self.terms_Path_Params)
             print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
-            r = session.get("https://" + self.target_url + self.terms_Path + self.terms_Path_Params, headers={'Authorization':authStr}, verify=False)
+            r = requests.get("https://" + self.target_url + self.terms_Path + self.terms_Path_Params, headers={'Authorization':authStr}, verify=False)
 
             print("[Term:getTerms()] STATUS CODE: " + str(r.status_code) )
             print("[Term:getTerms()] RESPONSE:")
@@ -111,12 +111,12 @@ class Term():
             }
         }
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         print("[Term:createTerm()] POST Request URL: https://" + self.target_url + self.terms_Path)
         print("[Term:createTerm()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.post("https://" + self.target_url + self.terms_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.post("https://" + self.target_url + self.terms_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Term:createTerm()] STATUS CODE: " + str(r.status_code) )
         print("[Term:createTerm()] RESPONSE:")
@@ -131,12 +131,12 @@ class Term():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Term:getTerm()] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         print("[Term:getTerm()] GET Request URL: https://" + self.target_url + self.term_Path+TERMEXTERNALID)
         print("[Term:getTerm()] JSON Payload: NONE REQUIRED")
-        r = session.get("https://" + self.target_url + self.term_Path+TERMEXTERNALID, headers={'Authorization':authStr},  verify=False)
+        r = requests.get("https://" + self.target_url + self.term_Path+TERMEXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[Term:getTerm()] STATUS CODE: " + str(r.status_code) )
         print("[Term:getTerm()] RESPONSE:")
@@ -160,12 +160,12 @@ class Term():
                 "duration":"continuous"
             }
         }
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         print("[Term:updateTerm()] PATCH Request URL: https://" + self.target_url + self.term_Path+TERMEXTERNALID)
         print("[Term:updateTerm()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.patch("https://" + self.target_url + self.term_Path+TERMEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.patch("https://" + self.target_url + self.term_Path+TERMEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Term:updateTerm()] STATUS CODE: " + str(r.status_code) )
         print("[Term:updateTerm()] RESPONSE:")
@@ -180,13 +180,13 @@ class Term():
         authStr = 'Bearer ' + token
         print("[Term:deleteTerm()] Term ExternalId: " + TERMEXTERNALID)
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         print("[Term:getTerms()] DELETE Request URL: https://" + self.target_url + self.term_Path+TERMEXTERNALID)
         print("[Term:getTerms()] JSON Payload: NONE REQUIRED")
         #r = session.delete("https://" + self.target_url + self.term_Path+self.termExternalId, headers={'Authorization':authStr}, verify=False)
-        r = session.delete("https://" + self.target_url+self.term_Path+TERMEXTERNALID, headers={'Authorization':authStr}, verify=False)
+        r = requests.delete("https://" + self.target_url+self.term_Path+TERMEXTERNALID, headers={'Authorization':authStr}, verify=False)
         print("[Term:deleteTerm()] STATUS CODE: " + str(r.status_code) )
         print("[Term:deleteTerm()] RESPONSE:")
         if r.text:

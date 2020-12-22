@@ -73,8 +73,8 @@ class Membership():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Membership:getCourseMemberships] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         replacement = "externalId:"+COURSEEXTERNALID
         memberships_Path = self.memberships_Path
@@ -94,7 +94,7 @@ class Membership():
             print("[Membership:getCourseMemberships()] GET Request URL: https://" + self.target_url + self.memberships_Path + self.coursememberships_Path_Params)
             print("[Membership:getCourseMemberships()] JSON Payload: NONE REQUIRED")
             #r = session.get("https://" + self.target_url + self.memberships_Path + self.memberships_Path_Params, headers={'Authorization':authStr}, verify=False)
-            r = session.get("https://" + self.target_url + self.memberships_Path + self.coursememberships_Path_Params, headers={'Authorization':authStr}, verify=False)
+            r = requests.get("https://" + self.target_url + self.memberships_Path + self.coursememberships_Path_Params, headers={'Authorization':authStr}, verify=False)
 
             print("[Membership:getCourseMemberships()] STATUS CODE: " + str(r.status_code) )
             print("[Membership:getCourseMemberships()] RESPONSE:")
@@ -133,8 +133,8 @@ class Membership():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Membership:getCourseMemberships] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         replacement = "externalId:"+USEREXTERNALID
         userMembships_Path = self.userMembships_Path
@@ -156,7 +156,7 @@ class Membership():
             print("[Membership:getUserMemberships()] GET Request URL: https://" + self.target_url + self.memberships_Path + self.usermemberships_Path_Params)
             print("[Membership:getUserMemberships()] JSON Payload: NONE REQUIRED")
             #r = session.get("https://" + self.target_url + self.memberships_Path + self.memberships_Path_Params, headers={'Authorization':authStr}, verify=False)
-            r = session.get("https://" + self.target_url + self.memberships_Path + self.usermemberships_Path_Params, headers={'Authorization':authStr}, verify=False)
+            r = requests.get("https://" + self.target_url + self.memberships_Path + self.usermemberships_Path_Params, headers={'Authorization':authStr}, verify=False)
 
             print("[Membership:getUserMemberships()] STATUS CODE: " + str(r.status_code) )
             print("[Membership:getUserMemberships()] RESPONSE:")
@@ -186,8 +186,8 @@ class Membership():
             "courseRoleId":"Instructor"
         }
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         #self.membership_Path = '/learn/api/public/v1/courses/courseId/users/userId'
         replacement = "externalId:"+COURSEEXTERNALID
@@ -200,7 +200,7 @@ class Membership():
         print("[Membership:getMemberships()] PUT Request URL: https://" + self.target_url + membership_Path)
         print("[Membership:getMemberships()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         #r = session.put("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
-        r = session.put("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.put("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[Membership:getMemberships()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:getMemberships()] RESPONSE:")
         if r.text:
@@ -215,8 +215,8 @@ class Membership():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Membership:getMemberships] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         replacement = "externalId:"+COURSEEXTERNALID
         membership_Path = self.membership_Path
@@ -227,7 +227,7 @@ class Membership():
 
         print("[Membership:getMemberships()] GET Request URL: https://" + self.target_url + membership_Path)
         print("[Membership:getMemberships()] JSON Payload: NONE REQUIRED")
-        r = session.get("https://" + self.target_url + membership_Path, headers={'Authorization':authStr},  verify=False)
+        r = requests.get("https://" + self.target_url + membership_Path, headers={'Authorization':authStr},  verify=False)
         print("[Membership:getMembership()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:getMembership()] RESPONSE:")
         if r.text:
@@ -242,15 +242,15 @@ class Membership():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Membership:readUserMemberships] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         replacement = "externalId:" + USEREXTERNALID
         userMemberships_Path = self.userMembships_Path
         userMemberships_Path = userMemberships_Path.replace("userId", replacement)
         print("[Membership:readUserMemberships()] GET Request URL: https://" + self.target_url + userMemberships_Path)
         print("[Membership:readUserMemberships()] JSON Payload: NONE REQUIRED")
-        r = session.get("https://" + self.target_url + userMemberships_Path, headers={'Authorization':authStr},  verify=False)
+        r = requests.get("https://" + self.target_url + userMemberships_Path, headers={'Authorization':authStr},  verify=False)
         print("[Membership:readUserMemberships()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:readUserMemberships()] RESPONSE:")
         if r.text:
@@ -272,8 +272,8 @@ class Membership():
             "courseRoleId":"Student"
         }
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         replacement = "externalId:"+ COURSEEXTERNALID
         membership_Path = self.membership_Path
@@ -285,7 +285,7 @@ class Membership():
         print("[Membership:updateMembership()] Request URL: https://" + self.target_url + membership_Path)
         print("[Membership:updateMembership()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
         #r = session.patch("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
-        r = session.patch("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.patch("https://" + self.target_url + membership_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[Membership:updateMembership()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:updateMembership()] RESPONSE:")
         if r.text:
@@ -298,8 +298,8 @@ class Membership():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         replacement = "externalId:"+ COURSEEXTERNALID
         membership_Path = self.membership_Path
@@ -311,7 +311,7 @@ class Membership():
         print("[Membership:deleteMembership()] DELETE Request URL: https://" + self.target_url + membership_Path)
         print("[Membership:deleteMembership()] JSON Payload: NONE REQUIRED")
         #r = session.delete("https://" + self.target_url + membership_Path, headers={'Authorization':authStr}, verify=False)
-        r = session.delete("https://" + self.target_url + membership_Path, headers={'Authorization':authStr}, verify=False)
+        r = requests.delete("https://" + self.target_url + membership_Path, headers={'Authorization':authStr}, verify=False)
         print("[Membership:deleteMembership()] STATUS CODE: " + str(r.status_code) )
         print("[Membership:deleteMembership()] RESPONSE:")
         if r.text:

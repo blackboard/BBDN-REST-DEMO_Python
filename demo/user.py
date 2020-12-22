@@ -65,7 +65,7 @@ class User():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[User:getUsers] authStr: ' + authStr)
-        session = requests.session()
+        #session = requests.session()
         #session.mount('https://', Tls1Adapter()) # remove for production
 
         nextPage = True
@@ -80,7 +80,7 @@ class User():
                 print ("[User:getUsers()] UPDATED URL PARAMS: %s" %self.users_Path_Params)
             print("[User:getUsers()] GET Request URL: https://" + self.target_url + self.users_Path + self.users_Path_Params)
             print("[User:getUsers()] JSON Payload: NONE REQUIRED")
-            r = session.get("https://" + self.target_url + self.users_Path + self.users_Path_Params, headers={'Authorization':authStr}, verify=False)
+            r = requests.get("https://" + self.target_url + self.users_Path + self.users_Path_Params, headers={'Authorization':authStr}, verify=False)
 
             print("[User:getUsers()] STATUS CODE: " + str(r.status_code) )
             print("[User:getUsers()] RESPONSE:")
@@ -118,12 +118,12 @@ class User():
             }
         }
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         print("[User:createUser()] POST Request URL: https://" + self.target_url + self.users_Path)
         print("[User:createUser()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.post("https://" + self.target_url + self.users_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.post("https://" + self.target_url + self.users_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[User:createUser()] STATUS CODE: " + str(r.status_code) )
         print("[User:createUser()] RESPONSE:")
         if r.text:
@@ -137,12 +137,12 @@ class User():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[User:getUser()] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         print("[User:getUser()] GET Request URL: https://" + self.target_url + self.user_Path+USEREXTERNALID)
         print("[User:getUser()] JSON Payload: NONE REQUIRED")
-        r = session.get("https://" + self.target_url + self.user_Path+USEREXTERNALID, headers={'Authorization':authStr},  verify=False)
+        r = requests.get("https://" + self.target_url + self.user_Path+USEREXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[User:getUser()] STATUS CODE: " + str(r.status_code) )
         print("[User:getUser()] RESPONSE:")
@@ -174,12 +174,12 @@ class User():
                 "email": "no.one@ereh.won",
             }
         }
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         print("[User:updateUser()] PATCH Request URL: https://" + self.target_url + self.user_Path+USEREXTERNALID)
         print("[User:updateUser()] JSON Payload: " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.patch("https://" + self.target_url + self.user_Path+USEREXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.patch("https://" + self.target_url + self.user_Path+USEREXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[User:updateUser()] STATUS CODE: " + str(r.status_code) )
         print("[User:updateUser()] RESPONSE:")
@@ -194,12 +194,12 @@ class User():
         authStr = 'Bearer ' + token
         print("[User:deleteUser()] USEREXTERNALID: " + USEREXTERNALID)
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
 
         print("[User:deleteUser()] DELETE Request URL: https://" + self.target_url + self.user_Path+USEREXTERNALID)
         print("[User:deleteUser()] JSON Payload: NONE REQUIRED")
-        r = session.delete("https://" + self.target_url + self.user_Path+USEREXTERNALID, headers={'Authorization':authStr}, verify=False)
+        r = requests.delete("https://" + self.target_url + self.user_Path+USEREXTERNALID, headers={'Authorization':authStr}, verify=False)
 
         print("[User:deleteUser()] STATUS CODE: " + str(r.status_code) )
         print("[User:deleteUser()] RESPONSE:")

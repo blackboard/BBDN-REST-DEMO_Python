@@ -66,8 +66,8 @@ class AuthToken():
 
     def __init__(self, URL):
         
-        self.KEY = "8907d3c7-b43c-4e52-864c-ba43e0a1f23f"
-        self.SECRET = "tgyDtZxV1Nw0uNX2ZUOK5pbvTt0j2ybK"
+        self.KEY = "insert_your_application_key_here"
+        self.SECRET = "insert_your_application_secret_here"
 
         #self.SECRET = "biExBJNI1IXiBBXpV8g01JJJjmXKHSg7" #Example Only. Change to your secret
         #self.KEY = "9cb9384a-3662-410d-9953-fe73cc374b81"#Example Only. Change to your key

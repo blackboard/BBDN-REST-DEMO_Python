@@ -113,15 +113,11 @@ def main(argv):
             if 'datasource' in COMMAND:
                 datasource_session.execute(COMMAND, authorized_session.getToken())
             else:
-                if not datasource_PK1:
-                    datasource_session.checkDataSource(authorized_session.getToken())
-                    datasource_PK1 = datasource_session.datasource_PK1
-                    print("[main] datasource_PK1: %s" % datasource_PK1)
-                    if not datasource_PK1:
-                        datasource_session.createDataSource(authorized_session.getToken())
-                datasource_session.getDataSource(authorized_session.getToken())
-                datasource_session.getDataSources(authorized_session.getToken())
-                datasource_session.updateDataSource(authorized_session.getToken())
+                if not datasource_PK1 or datasource_PK1 is None:
+                    datasource_session.createDataSource(authorized_session.getToken())
+                    datasource_session.getDataSource(authorized_session.getToken())
+                    datasource_session.getDataSources(authorized_session.getToken())
+                    datasource_session.updateDataSource(authorized_session.getToken())
 
         if TERM or ALL:
             term_session = Term(target_url, authorized_session.getToken())

@@ -67,8 +67,8 @@ class Course():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Course:getCourses()] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
 
         nextPage = True
         nextpageURL = None
@@ -82,7 +82,7 @@ class Course():
                 print ("[Course:getCourses()] UPDATED URL PARAMS: %s" %self.courses_Path_Params)
             print("[Course:getCourses()] GET Request URL: https://" + self.target_url + self.courses_Path + self.courses_Path_Params)
             print("[Course:getCourses()] JSON Payload: NONE REQUIRED")
-            r = session.get("https://" + self.target_url + self.courses_Path + self.courses_Path_Params, headers={'Authorization':authStr}, verify=False)
+            r = requests.get("https://" + self.target_url + self.courses_Path + self.courses_Path_Params, headers={'Authorization':authStr}, verify=False)
 
             print("[Course:getCourses()] STATUS CODE: " + str(r.status_code) )
             print("[Course:getCourses()] RESPONSE:")
@@ -119,11 +119,11 @@ class Course():
             }
         }
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
         print("[Course:createCourse()] POST Request URL: https://" + self.target_url + self.courses_Path)
         print("[Courses:createCourse()] JSON Payload: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.post("https://" + self.target_url + self.courses_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.post("https://" + self.target_url + self.courses_Path, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
         print("[Course:createCourse()] STATUS CODE: " + str(r.status_code) )
         print("[Course:createCourse()] RESPONSE:")
         if r.text:
@@ -137,11 +137,11 @@ class Course():
         #"Authorization: Bearer $token"
         authStr = 'Bearer ' + token
         print('[Course:getCourses] authStr: ' + authStr)
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production
         print("[Course:getCourse()] GET Request URL: https://" + self.target_url + self.course_Path + COURSEEXTERNALID)
 
-        r = session.get("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, headers={'Authorization':authStr},  verify=False)
+        r = requests.get("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, headers={'Authorization':authStr},  verify=False)
 
         print("[Course:getCourse()] STATUS CODE: " + str(r.status_code) )
         print("[Course:getCourse()] RESPONSE:")
@@ -171,11 +171,11 @@ class Course():
                 "duration":"continuous"
             }
         }
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
         print("[Course:updateCourse()] PATCH Request URL: https://" + self.target_url + self.course_Path + COURSEEXTERNALID)
         print("[Courses:updateCourse()] Result: \n " + json.dumps(self.PAYLOAD, indent=4, separators=(',', ': ')))
-        r = session.patch("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
+        r = requests.patch("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, data=json.dumps(self.PAYLOAD), headers={'Authorization':authStr, 'Content-Type':'application/json'}, verify=False)
 
         print("[Course:updateCourse()] STATUS CODE: " + str(r.status_code) )
         print("[Course:updateCourse()] RESPONSE:")
@@ -190,11 +190,11 @@ class Course():
         authStr = 'Bearer ' + token
         print("[Course:deleteCourse()] COURSEEXTERNALID: " + COURSEEXTERNALID)
 
-        session = requests.session()
-        session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
+        #session = requests.session()
+        #session.mount('https://', Tls1Adapter()) # remove for production with commercial cert
         print("[Course:deleteCourse()] DELETE Request URL: https://" + self.target_url + self.course_Path + COURSEEXTERNALID)
         print("[Courses:deleteCourse()] JSON Payload: NONE REQUIRED")
-        r = session.delete("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, headers={'Authorization':authStr}, verify=False)
+        r = requests.delete("https://" + self.target_url + self.course_Path+COURSEEXTERNALID, headers={'Authorization':authStr}, verify=False)
 
         print("[Course:deleteCourse()] STATUS CODE: " + str(r.status_code) )
         print("[Course:deleteCourse()] RESPONSE:")
